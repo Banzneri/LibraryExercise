@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import './App.css'
+import axios from 'axios'
+import Book from './components/Book'
 
-function App() {
+const BASE_URL = 'http://localhost:3001'
+
+const App = () => {
+  const [books, setBooks] = useState([])
+
+  const handleGetBooks = () => {
+    axios
+      .get(`${BASE_URL}/books`)
+      .then(books => {
+        setBooks(books.data)
+        console.log(books.data)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='app'>
+      <div className='flex-container' id='header'>
+        <h1>Books</h1>
+        <input id='search-button' type='button' onClick={handleGetBooks} value='search'/>
+      </div>
+      <div className='flex-container' id='books-list'>
+        {books.map(b => <Book book = {b} key = {b.id} />)}
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

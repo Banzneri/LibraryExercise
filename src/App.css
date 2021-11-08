@@ -1,38 +1,37 @@
-.App {
-  text-align: center;
+* {
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.app {
+  padding: 2rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+#header {
+  padding-left: 1rem;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+#search-button {
+  margin-left: 1rem;
+  width: 10rem;
+  height: 2rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.book-description {
+  padding: 0.5rem;
+  margin: 1rem;
+  width: 20rem;
+  background-color: gray;
+}
+
+.book-description:hover {
+  cursor: pointer;
+  background-color: darkgray;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
 }
