@@ -103,6 +103,27 @@ const getGenreById = (request, response) => {
   })
 }
 
+// LANGUAGE QUERIES
+const getLanguages = (request, response) => {
+  pool.query('SELECT * FROM languages', (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+const getLanguageById = (request, response) => {
+  const id = parseInt(request.params.id)
+
+  pool.query('SELECT * FROM languages WHERE id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
 export
 {
   getAllBooks,
@@ -111,5 +132,7 @@ export
   updateBook,
   getGenres,
   getGenreById,
-  deleteBookById
+  deleteBookById,
+  getLanguages,
+  getLanguageById
 }

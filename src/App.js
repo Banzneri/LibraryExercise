@@ -1,30 +1,64 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css'
 import axios from 'axios'
 import Book from './components/Book'
+import AddBookForm from './components/AddBookForm'
 
 const BASE_URL = 'http://localhost:3001'
 
 const App = () => {
   const [books, setBooks] = useState([])
+  const [showForm, setShowForm] = useState(false)
 
   const handleGetBooks = () => {
     axios
       .get(`${BASE_URL}/books`)
       .then(books => {
         setBooks(books.data)
-        console.log(books.data)
       })
       .catch(error => {
         console.log(error)
       })
   }
 
+  const handleAddBook = () => {
+    const name = document.getElementById('form-name').value
+    const year = document.getElementById('form-year').value
+    const genre = document.getElementById('form-genre').value
+    const language = document.getElementById('form-language').value
+
+    const book = {
+      name: name,
+      release_year: year,
+      genre_id: genre,
+      language_id: language
+    }
+
+    axios
+      .post(`${BASE_URL}/books`, book)
+      .then(e => {
+        setBooks(books.concat(book))
+        console.log(books.concat(book))
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
+  const handleShowForm = () => {
+    setShowForm(!showForm)
+  }
+
+  useEffect(() => {
+    handleGetBooks()
+  }, books)
+
   return (
     <div className='app'>
       <div className='flex-container' id='header'>
         <h1>Books</h1>
-        <input id='search-button' type='button' onClick={handleGetBooks} value='search'/>
+        <input className='button' type='button' value='new book' onClick={handleShowForm}/>
+        {showForm && <AddBookForm handleAddBook={handleAddBook}/>}
       </div>
       <div className='flex-container' id='books-list'>
         {books.map(b => <Book book = {b} key = {b.id} />)}

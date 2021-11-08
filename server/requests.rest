@@ -1,2 +1,9 @@
-DELETE http://localhost:3001/books/9 HTTP/1.1
+POST http://localhost:3001/books HTTP/1.1
 content-type: application/json
+
+{
+    "name": "Dune",
+    "release_year": 1965,
+    "genre_id": 1,
+    "language_id": 2
+}
