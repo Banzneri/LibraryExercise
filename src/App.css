@@ -9,8 +9,9 @@
 }
 
 #header {
-  padding-left: 1rem;
+  padding: 0 10vw 0 10vw;
   align-items: center;
+  justify-content: space-between;
 }
 
 .button {
@@ -22,7 +23,6 @@
 
 .book-description {
   padding: 0.5rem;
-  margin: 1rem;
   width: 20rem;
   background-color: gray;
 }
@@ -35,4 +35,12 @@
 .flex-container {
   display: flex;
   flex-wrap: wrap;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  grid-gap: 16px;
+
+  padding: 0 10vw 0 10vw;
 }

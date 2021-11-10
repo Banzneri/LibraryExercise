@@ -2,7 +2,6 @@
 import React from 'react'
 
 const Book = ({ book }) => {
-  console.log(book)
   return (
       <div className='book-description'>
         <p><b>Name</b>: {book.name}</p>

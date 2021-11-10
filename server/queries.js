@@ -23,7 +23,6 @@ const getAllBooks = (request, response) => {
       console.log(error)
       throw error
     }
-    console.log(results.rows)
     response.status(200).json(results.rows)
   })
 }
@@ -48,7 +47,7 @@ const addBook = (request, response) => {
     if (error) {
       throw error
     }
-    console.log(results)
+    response.status(200).send(`book added with the name ${name}`)
   })
 }
 
@@ -124,8 +123,7 @@ const getLanguageById = (request, response) => {
   })
 }
 
-export
-{
+export {
   getAllBooks,
   getBookById,
   addBook,

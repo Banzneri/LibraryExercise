@@ -8,7 +8,10 @@ const BASE_URL = 'http://localhost:3001'
 
 const App = () => {
   const [books, setBooks] = useState([])
-  const [showForm, setShowForm] = useState(false)
+
+  useEffect(() => {
+    handleGetBooks()
+  }, [])
 
   const handleGetBooks = () => {
     axios
@@ -37,30 +40,21 @@ const App = () => {
     axios
       .post(`${BASE_URL}/books`, book)
       .then(e => {
-        setBooks(books.concat(book))
-        console.log(books.concat(book))
+        console.log(e)
+        handleGetBooks()
       })
       .catch(error => {
         console.log(error)
       })
   }
 
-  const handleShowForm = () => {
-    setShowForm(!showForm)
-  }
-
-  useEffect(() => {
-    handleGetBooks()
-  }, books)
-
   return (
     <div className='app'>
       <div className='flex-container' id='header'>
         <h1>Books</h1>
-        <input className='button' type='button' value='new book' onClick={handleShowForm}/>
-        {showForm && <AddBookForm handleAddBook={handleAddBook}/>}
+        <AddBookForm handleAddBook={handleAddBook}/>
       </div>
-      <div className='flex-container' id='books-list'>
+      <div className='grid-container' id='books-list'>
         {books.map(b => <Book book = {b} key = {b.id} />)}
       </div>
     </div>
