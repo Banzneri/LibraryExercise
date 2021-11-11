@@ -24,6 +24,18 @@ const App = () => {
       })
   }
 
+  const handleRemoveBook = (id) => {
+    axios
+      .delete(`${BASE_URL}/books/${id}`)
+      .then(e => {
+        console.log(e)
+        handleGetBooks()
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
   const handleAddBook = () => {
     const name = document.getElementById('form-name').value
     const year = document.getElementById('form-year').value
@@ -50,9 +62,9 @@ const App = () => {
 
   return (
     <div className='app'>
-      <Header handleAddBook={handleAddBook}/>
+      <Header handleAddBook={handleAddBook} handleRemoveBook={handleRemoveBook}/>
       <div className='grid-container' id='books-list'>
-        {books.map(b => <Book book = {b} key = {b.id} />)}
+        {books.map(b => <Book book = {b} key = {b.id} handleRemoveBook={handleRemoveBook}/>)}
       </div>
     </div>
   )
