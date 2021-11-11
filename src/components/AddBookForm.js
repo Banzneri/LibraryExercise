@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const AddBookForm = ({ handleAddBook }) => {
   return (
@@ -17,6 +17,10 @@ const AddBookForm = ({ handleAddBook }) => {
         </form>
       </div>
   )
+}
+
+AddBookForm.propTypes = {
+  handleAddBook: PropTypes.func
 }
 
 export default AddBookForm

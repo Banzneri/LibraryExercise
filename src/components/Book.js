@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const Book = ({ book }) => {
   return (
@@ -10,6 +10,10 @@ const Book = ({ book }) => {
         <p><b>Language</b>: {book.language}</p>
       </div>
   )
+}
+
+Book.propTypes = {
+  book: PropTypes.object
 }
 
 export default Book

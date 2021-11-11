@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import './App.css'
 import axios from 'axios'
 import Book from './components/Book'
-import AddBookForm from './components/AddBookForm'
+import Header from './components/Header'
 
 const BASE_URL = 'http://localhost:3001'
 
@@ -50,10 +50,7 @@ const App = () => {
 
   return (
     <div className='app'>
-      <div className='flex-container' id='header'>
-        <h1>Books</h1>
-        <AddBookForm handleAddBook={handleAddBook}/>
-      </div>
+      <Header handleAddBook={handleAddBook}/>
       <div className='grid-container' id='books-list'>
         {books.map(b => <Book book = {b} key = {b.id} />)}
       </div>
