@@ -21,14 +21,13 @@
   height: 2rem;
 }
 
-.book-description {
+.book {
   padding: 0.5rem;
   width: 20rem;
   background-color: gray;
 }
 
-.book-description:hover {
-  cursor: pointer;
+.book:hover {
   background-color: darkgray;
 }
 
@@ -46,4 +45,12 @@
   grid-gap: 16px;
 
   padding: 0 10vw 0 10vw;
+}
+
+#books-list {
+  margin: 0 auto;
+}
+
+@media only screen and (max-width: 600px) {
+  
 }

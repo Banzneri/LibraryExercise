@@ -17,7 +17,7 @@ const getAllBooks = (request, response) => {
                 FROM books 
                 INNER JOIN genres ON genres.id = books.genre_id 
                 INNER JOIN languages ON languages.id = books.language_id`
-  // eslint-disable-next-line quotes
+
   pool.query(query, (error, results) => {
     if (error) {
       console.log(error)
