@@ -22,9 +22,14 @@
 }
 
 .book {
+  position: relative;
   padding: 0.5rem;
   width: 20rem;
   background-color: gray;
+}
+
+.book-info {
+  padding-bottom: 1rem;
 }
 
 .book:hover {
@@ -48,8 +53,10 @@
   padding: 0 10vw 0 10vw;
 }
 
-#books-list {
-  margin: 0 auto;
+.book-buttons {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 @media only screen and (max-width: 600px) {
