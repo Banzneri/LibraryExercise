@@ -14,6 +14,46 @@
   justify-content: space-between;
 }
 
+#edit-book {
+  padding: 0px 1rem 0px 1rem;
+  background-color: grey;
+  border: 2px black solid;
+  position: fixed;
+  display: none;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  z-index: 999;
+  justify-items: center;
+}
+
+#edit-book input, select {
+  display: block;
+  margin: 0.5rem 0px 0.5rem 0px;
+}
+
+#add-book-form form {
+  align-items: center;
+}
+
+#add-book-form input, select {
+  margin: 0px 0.5rem 0px 0.5rem;
+}
+
+#close-edit {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.form-span {
+  display: inline-block;
+}
+
+.form-span label {
+  display: block;
+}
+
 .button {
   margin-left: 1rem;
   margin-right: 1rem;

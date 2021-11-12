@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable camelcase */
 import pg from 'pg'
 
@@ -13,12 +14,13 @@ const pool = new Pool({
 
 // BOOK QUERIES
 const getAllBooks = (request, response) => {
-  const query = `SELECT books.id, books.name, books.release_year, genres.name AS genre, languages.name AS language
-                FROM books 
-                INNER JOIN genres ON genres.id = books.genre_id 
-                INNER JOIN languages ON languages.id = books.language_id`
+  const altQuery = `SELECT books.id, books.name, books.release_year, books.genre_id, books.language_id FROM books`
+  // const query = `SELECT books.id, books.name, books.release_year, genres.name AS genre, languages.name AS language
+  //               FROM books
+  //               INNER JOIN genres ON genres.id = books.genre_id
+  //               INNER JOIN languages ON languages.id = books.language_id`
 
-  pool.query(query, (error, results) => {
+  pool.query(altQuery, (error, results) => {
     if (error) {
       console.log(error)
       throw error
