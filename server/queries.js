@@ -12,15 +12,15 @@ const pool = new Pool({
   port: 5432
 })
 
-// BOOK QUERIES
-const getAllBooks = (request, response) => {
-  const altQuery = `SELECT books.id, books.name, books.release_year, books.genre_id, books.language_id FROM books`
-  // const query = `SELECT books.id, books.name, books.release_year, genres.name AS genre, languages.name AS language
-  //               FROM books
-  //               INNER JOIN genres ON genres.id = books.genre_id
-  //               INNER JOIN languages ON languages.id = books.language_id`
+// function getRequest(query, params) {
+//   pool.query(query, params)
+// }
 
-  pool.query(altQuery, (error, results) => {
+// BOOK QUERIES
+export const getAllBooks = (request, response) => {
+  const query = `SELECT books.id, books.name, books.release_year, books.genre_id, books.language_id FROM books`
+
+  pool.query(query, (error, results) => {
     if (error) {
       console.log(error)
       throw error
@@ -29,7 +29,7 @@ const getAllBooks = (request, response) => {
   })
 }
 
-const getBookById = (request, response) => {
+export const getBookById = (request, response) => {
   const id = parseInt(request.params.id)
 
   pool.query('SELECT * FROM books WHERE id = $1', [id], (error, results) => {
@@ -40,20 +40,21 @@ const getBookById = (request, response) => {
   })
 }
 
-const addBook = (request, response) => {
+export const addBook = (request, response) => {
   const { name, release_year, genre_id, language_id } = request.body
   const query = `INSERT INTO books (name, release_year, genre_id, language_id) 
-                  VALUES ($1, $2, $3, $4)`
+                  VALUES ($1, $2, $3, $4) RETURNING id`
 
   pool.query(query, [name, release_year, genre_id, language_id], (error, results) => {
     if (error) {
       throw error
     }
-    response.status(200).send(`book added with the name ${name}`)
+    console.log('returning ' + results.rows)
+    response.status(200).json(results.rows)
   })
 }
 
-const updateBook = (request, response) => {
+export const updateBook = (request, response) => {
   const id = parseInt(request.params.id)
   const { name, release_year, genre_id, language_id } = request.body
 
@@ -69,7 +70,7 @@ const updateBook = (request, response) => {
   )
 }
 
-const deleteBookById = (request, response) => {
+export const deleteBookById = (request, response) => {
   const id = parseInt(request.params.id)
 
   pool.query(
@@ -83,8 +84,85 @@ const deleteBookById = (request, response) => {
   )
 }
 
+// BORROWS QUERIES
+export const getAllBorrows = (request, response) => {
+  const query = `SELECT * FROM borrows`
+
+  pool.query(query, (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+export const getBorrowById = (request, response) => {
+  const id = parseInt(request.params.id)
+
+  pool.query('SELECT * FROM borrows WHERE id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+export const getBorrowsByUserId = (request, response) => {
+  const id = parseInt(request.params.id)
+
+  pool.query('SELECT * FROM borrows WHERE user_id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+export const getBorrowByVolumeId = (request, response) => {
+  const id = parseInt(request.params.id)
+
+  pool.query('SELECT * FROM borrows WHERE volume_id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+// VOLUMES QUERIES
+export const getAllVolumes = (request, response) => {
+  pool.query('SELECT * FROM volumes', (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+export const getVolumesByBookId = (request, response) => {
+  const id = parseInt(request.params.id)
+
+  pool.query('SELECT * FROM volumes WHERE book_id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+export const addVolume = (request, response) => {
+  const id = parseInt(request.params.id)
+
+  pool.query('INSERT INTO volumes (book_id) VALUES ($1)', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).send(`Added a new volume for the book id: ${id}`)
+  })
+}
+
 // GENRE QUERIES
-const getGenres = (request, response) => {
+export const getGenres = (request, response) => {
   pool.query('SELECT * FROM genres', (error, results) => {
     if (error) {
       throw error
@@ -93,7 +171,7 @@ const getGenres = (request, response) => {
   })
 }
 
-const getGenreById = (request, response) => {
+export const getGenreById = (request, response) => {
   const id = parseInt(request.params.id)
 
   pool.query('SELECT * FROM genres WHERE id = $1', [id], (error, results) => {
@@ -105,7 +183,7 @@ const getGenreById = (request, response) => {
 }
 
 // LANGUAGE QUERIES
-const getLanguages = (request, response) => {
+export const getLanguages = (request, response) => {
   pool.query('SELECT * FROM languages', (error, results) => {
     if (error) {
       throw error
@@ -114,7 +192,7 @@ const getLanguages = (request, response) => {
   })
 }
 
-const getLanguageById = (request, response) => {
+export const getLanguageById = (request, response) => {
   const id = parseInt(request.params.id)
 
   pool.query('SELECT * FROM languages WHERE id = $1', [id], (error, results) => {
@@ -123,16 +201,4 @@ const getLanguageById = (request, response) => {
     }
     response.status(200).json(results.rows)
   })
-}
-
-export {
-  getAllBooks,
-  getBookById,
-  addBook,
-  updateBook,
-  getGenres,
-  getGenreById,
-  deleteBookById,
-  getLanguages,
-  getLanguageById
 }

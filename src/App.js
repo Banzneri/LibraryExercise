@@ -13,8 +13,10 @@ const App = () => {
   const [selectedBook, setSelectedBook] = useState({})
   const [genres, setGenres] = useState([])
   const [languages, setLanguages] = useState([])
+  const [volumes, setVolumes] = useState([])
 
   useEffect(() => {
+    handleGetVolumes()
     handleGetGenres()
     handleGetLanguages()
     handleGetBooks()
@@ -97,13 +99,35 @@ const App = () => {
       })
   }
 
+  const handleGetVolumes = () => {
+    axios
+      .get(`${BASE_URL}/volumes`)
+      .then(e => {
+        setVolumes(e.data)
+      })
+      .catch(e => {
+        console.log(e)
+      })
+  }
+
+  const handleAddVolume = (id) => {
+    axios
+      .post(`${BASE_URL}/volumes/${id}`)
+      .then(e => {
+        console.log(e)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
   const handleAddBook = () => {
     const book = getBookDataFromElementId('add')
 
     axios
       .post(`${BASE_URL}/books`, book)
       .then(e => {
-        console.log(e)
+        handleAddVolume(e.data[0].id)
         handleGetBooks()
       })
       .catch(error => {
@@ -113,11 +137,12 @@ const App = () => {
 
   const handleViewBook = (book) => {
     setSelectedBook(book)
-    const editBook = document.getElementById('edit-book')
     document.getElementById('edit-name').value = book.name
     document.getElementById('edit-year').value = book.release_year
     document.getElementById('edit-genre').value = book.genre_id
     document.getElementById('edit-language').value = book.language_id
+    document.getElementById('edit-volume').value = volumes.filter(e => e.book_id === book.id).length
+    const editBook = document.getElementById('edit-book')
     editBook.style.display = 'block'
   }
 
@@ -145,12 +170,14 @@ const App = () => {
         handleRemoveBook={handleRemoveBook}
         handleViewBook={handleViewBook}
         genres={genres}
-        languages={languages} />
+        languages={languages}
+        volumes={volumes} />
       <BookEdit
         handleEditBook={handleEditBook}
         book={selectedBook}
         genres={genres}
-        languages={languages}/>
+        languages={languages}
+        volumes={volumes} />
     </div>
   )
 }
