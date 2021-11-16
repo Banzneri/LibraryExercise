@@ -1,23 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import * as requests from '../requests.js'
 
 const BookEdit = ({ book, booksData, setSelectedBook }) => {
-  useEffect(() => {
-    document.getElementById('edit-name').value = book.name
-    document.getElementById('edit-year').value = book.release_year
-    document.getElementById('edit-genre').value = book.genre_id
-    document.getElementById('edit-language').value = book.language_id
-    // document.getElementById('edit-volume').value = booksData.volumes.filter(e => e.book_id === book.id).length
-  }, [])
-
   const hide = () => {
     setSelectedBook(null)
   }
-
-  // const getQuantity = () => {
-  //   return booksData.volumes.filter(e => e.book_id === book.id).length
-  // }
 
   const onSubmit = (e) => {
     e.preventDefault()
