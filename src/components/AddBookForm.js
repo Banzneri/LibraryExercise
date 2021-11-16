@@ -29,7 +29,7 @@ const AddBookForm = ({ booksData }) => {
         </span>
         <span className='form-span'>
           <label htmlFor='add-year'>Release year:</label>
-          <input className='button' type='text' id='add-year' name='release_year' required />
+          <input className='button' type='year' id='add-year' maxLength='4' pattern='\d{4}' required />
         </span>
         <span className='form-span'>
         <label htmlFor='add-genres'>Genre:</label>

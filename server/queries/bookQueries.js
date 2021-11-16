@@ -14,6 +14,21 @@ export const getAllBooks = (request, response) => {
   })
 }
 
+export const getAllBooksAlt = (request, response) => {
+  const query = `SELECT books.id, books.name, books.release_year, genres.name, languages.name 
+                  FROM books 
+                  INNER JOIN genres ON books.genre_id = genres.id
+                  INNER JOIN languages ON books.language_id = languages.id`
+
+  db.query(query, (error, results) => {
+    if (error) {
+      console.log(error)
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
 export const getBookById = (request, response) => {
   const id = parseInt(request.params.id)
 
