@@ -74,7 +74,7 @@ export const deleteBookById = (request, response) => {
   const id = parseInt(request.params.id)
 
   pool.query(
-    'DELETE FROM books WHERE id = $1', [id],
+    'DELETE FROM books WHERE id = $1 RETURNING books', [id],
     (error, results) => {
       if (error) {
         throw error
