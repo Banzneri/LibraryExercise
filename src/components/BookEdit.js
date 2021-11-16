@@ -8,16 +8,16 @@ const BookEdit = ({ book, booksData, setSelectedBook }) => {
     document.getElementById('edit-year').value = book.release_year
     document.getElementById('edit-genre').value = book.genre_id
     document.getElementById('edit-language').value = book.language_id
-    document.getElementById('edit-volume').value = booksData.volumes.filter(e => e.book_id === book.id).length
+    // document.getElementById('edit-volume').value = booksData.volumes.filter(e => e.book_id === book.id).length
   }, [])
 
   const hide = () => {
     setSelectedBook(null)
   }
 
-  const getQuantity = () => {
-    return booksData.volumes.filter(e => e.book_id === book.id).length
-  }
+  // const getQuantity = () => {
+  //   return booksData.volumes.filter(e => e.book_id === book.id).length
+  // }
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -45,8 +45,8 @@ const BookEdit = ({ book, booksData, setSelectedBook }) => {
         <select id="edit-language" name="edit-languages" defaultValue={book.language_id}>
           {booksData.languages.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
         </select>
-        <label htmlFor='edit-volume'> Quantity: </label>
-        <input type='text' id='edit-volume' defaultValue={getQuantity()} required/>
+        {/* <label htmlFor='edit-volume'> Quantity: </label>
+        <input type='text' id='edit-volume' defaultValue={getQuantity()} required/> */}
         <input className='button' type='submit' defaultValue='Edit book' />
       </form>
       <input id='close-edit' type='button' value='close' onClick={hide} />

@@ -12,10 +12,6 @@ const pool = new Pool({
   port: 5432
 })
 
-// function getRequest(query, params) {
-//   pool.query(query, params)
-// }
-
 // BOOK QUERIES
 export const getAllBooks = (request, response) => {
   const query = `SELECT books.id, books.name, books.release_year, books.genre_id, books.language_id FROM books`
