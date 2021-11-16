@@ -52,7 +52,8 @@ const BooksList = ({ booksData }) => {
       )}
       {selectedBook && <BookEdit
         book={selectedBook}
-        booksData={booksData} />
+        booksData={booksData}
+        setSelectedBook={setSelectedBook} />
       }
     </div>
   )

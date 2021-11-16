@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import * as requests from '../requests.js'
 
-const BookEdit = ({ book, booksData }) => {
+const BookEdit = ({ book, booksData, setSelectedBook }) => {
   useEffect(() => {
     document.getElementById('edit-name').value = book.name
     document.getElementById('edit-year').value = book.release_year
@@ -12,7 +12,7 @@ const BookEdit = ({ book, booksData }) => {
   }, [])
 
   const hide = () => {
-    document.getElementById('edit-book').style.display = 'none'
+    setSelectedBook(null)
   }
 
   const getQuantity = () => {
@@ -56,7 +56,8 @@ const BookEdit = ({ book, booksData }) => {
 
 BookEdit.propTypes = {
   book: PropTypes.object,
-  booksData: PropTypes.object
+  booksData: PropTypes.object,
+  setSelectedBook: PropTypes.func
 }
 
 export default BookEdit
