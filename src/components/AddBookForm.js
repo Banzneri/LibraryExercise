@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import React from 'react'
 import * as requests from '../requests.js'
 import PropTypes from 'prop-types'
@@ -7,15 +6,15 @@ const AddBookForm = ({ booksData }) => {
   const onSubmit = (e) => {
     e.preventDefault()
     const name = e.target[0].value
-    const release_year = e.target[1].value
-    const genre_id = e.target[2].value
-    const language_id = e.target[3].value
+    const releaseYear = e.target[1].value
+    const genreId = e.target[2].value
+    const languageId = e.target[3].value
 
     const book = {
       name,
-      release_year,
-      genre_id,
-      language_id
+      releaseYear,
+      genreId,
+      languageId
     }
 
     requests.addBook(book, booksData.setBooks)

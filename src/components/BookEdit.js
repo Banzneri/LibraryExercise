@@ -10,9 +10,9 @@ const BookEdit = ({ book, booksData, setSelectedBook }) => {
   const onSubmit = (e) => {
     e.preventDefault()
     book.name = e.target[0].value
-    book.release_year = e.target[1].value
-    book.genre_id = e.target[2].value
-    book.language_id = e.target[3].value
+    book.releaseYear = e.target[1].value
+    book.genreId = e.target[2].value
+    book.languageId = e.target[3].value
     requests.editBook(book, booksData.setBooks)
     hide()
   }
