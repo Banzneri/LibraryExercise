@@ -14,6 +14,18 @@ export const getBooks = (setBooks) => {
     })
 }
 
+export const getBooksAlt = (setBooks) => {
+  axios
+    .get(`${BASE_URL}/booksAlt`)
+    .then(books => {
+      console.log(books.data)
+      setBooks(books.data)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+}
+
 export const getGenres = (setGenres) => {
   axios
     .get(`${BASE_URL}/genres`)
