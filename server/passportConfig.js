@@ -20,6 +20,7 @@ const initialize = (passport) => {
             }
 
             if (isMatch) {
+              console.log('Is match: ' + user)
               return done(null, user)
             } else {
               return done(null, false, { message: 'Password is not correct' })

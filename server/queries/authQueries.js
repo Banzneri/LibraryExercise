@@ -51,3 +51,7 @@ export const registerUser = async (request, response, next) => {
     })
   }
 }
+
+export const loginUser = (request, response) => {
+  response.status(200).json({ message: 'successful login' })
+}

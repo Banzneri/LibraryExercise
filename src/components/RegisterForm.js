@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const RegisterForm = () => {
   const [errors, setErrors] = useState([])
+  const navigate = useNavigate()
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -17,7 +19,7 @@ const RegisterForm = () => {
     axios
       .post('http://localhost:3001/users/register', user)
       .then(e => {
-        console.log(e)
+        navigate('/login')
       })
       .catch(error => {
         setErrors(error.response.data.errors)
