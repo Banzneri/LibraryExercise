@@ -1,31 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './App.css'
-import BooksList from './components/BooksList'
-import Header from './components/Header'
-import RegisterForm from './components/RegisterForm'
+import { BooksList } from './components/BooksList'
+import { Header } from './components/Header'
 
 export const App = () => {
-  const [books, setBooks] = useState([])
-  const [genres, setGenres] = useState([])
-  const [languages, setLanguages] = useState([])
-  const [volumes, setVolumes] = useState([])
-
-  const booksData = {
-    books,
-    genres,
-    languages,
-    volumes,
-    setBooks,
-    setGenres,
-    setLanguages,
-    setVolumes
-  }
-
   return (
     <div className='app'>
-      <RegisterForm />
-      <Header booksData={booksData} />
-      <BooksList booksData={booksData} />
+      <Header />
+      <BooksList />
     </div>
   )
 }

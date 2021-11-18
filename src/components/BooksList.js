@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Book from './Book'
 import BookEdit from './BookEdit'
-import PropTypes from 'prop-types'
+import AddBookForm from './AddBookForm'
 import * as requests from '../requests.js'
 
 const sortByNameAndReturnNew = (booksToSort) => {
@@ -23,14 +23,18 @@ const sortByNameAndReturnNew = (booksToSort) => {
   return sortedBooks
 }
 
-const BooksList = ({ booksData }) => {
+export const BooksList = () => {
+  const [books, setBooks] = useState([])
+  const [genres, setGenres] = useState([])
+  const [languages, setLanguages] = useState([])
+  const [volumes, setVolumes] = useState([])
   const [selectedBook, setSelectedBook] = useState(null)
 
   useEffect(() => {
-    requests.getGenres(booksData.setGenres)
-    requests.getLanguages(booksData.setLanguages)
-    requests.getVolumes(booksData.setVolumes)
-    requests.getBooks(booksData.setBooks)
+    requests.getGenres(setGenres)
+    requests.getLanguages(setLanguages)
+    requests.getVolumes(setVolumes)
+    requests.getBooks(setBooks)
   }, [])
 
   const handleViewBook = (book) => {
@@ -38,29 +42,28 @@ const BooksList = ({ booksData }) => {
   }
 
   return (
-    <div className='grid-container' id='books-list'>
-      {booksData.books && sortByNameAndReturnNew(booksData.books).map(b =>
-        <Book
-          book={b}
-          key={b.id}
-          handleRemoveBook={requests.removeBook}
-          handleViewBook={handleViewBook}
-          setBooks={booksData.setBooks}
-          volumes={booksData.volumes.filter(e => e.book_id === b.id)}
-          genre={booksData.genres.find(e => e.id === b.genre_id)}
-          language={booksData.languages.find(e => e.id === b.language_id)} />
-      )}
-      {selectedBook && <BookEdit
-        book={selectedBook}
-        booksData={booksData}
-        setSelectedBook={setSelectedBook} />
-      }
+    <div>
+      <AddBookForm genres={genres} languages={languages} setBooks={setBooks} />
+      <div className='grid-container' id='books-list'>
+        {books && sortByNameAndReturnNew(books).map(b =>
+          <Book
+            book={b}
+            key={b.id}
+            handleRemoveBook={requests.removeBook}
+            handleViewBook={handleViewBook}
+            setBooks={setBooks}
+            volume={volumes.filter(e => e.book_id === b.id)}
+            genre={genres.find(e => e.id === b.genre_id)}
+            language={languages.find(e => e.id === b.language_id)} />
+        )}
+        {selectedBook && <BookEdit
+          book={selectedBook}
+          genres={genres}
+          languages={languages}
+          setSelectedBook={setSelectedBook}
+          setBooks={setBooks}/>
+        }
+      </div>
     </div>
   )
 }
-
-BooksList.propTypes = {
-  booksData: PropTypes.object
-}
-
-export default BooksList

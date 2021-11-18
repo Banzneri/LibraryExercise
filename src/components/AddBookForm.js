@@ -2,7 +2,7 @@ import React from 'react'
 import * as requests from '../requests.js'
 import PropTypes from 'prop-types'
 
-const AddBookForm = ({ booksData }) => {
+const AddBookForm = ({ genres, languages, setBooks }) => {
   const onSubmit = (e) => {
     e.preventDefault()
     const name = e.target[0].value
@@ -17,7 +17,7 @@ const AddBookForm = ({ booksData }) => {
       languageId
     }
 
-    requests.addBook(book, booksData.setBooks)
+    requests.addBook(book, setBooks)
   }
 
   return (
@@ -32,25 +32,27 @@ const AddBookForm = ({ booksData }) => {
           <input className='button' type='year' id='add-year' maxLength='4' pattern='\d{4}' required />
         </span>
         <span className='form-span'>
-        <label htmlFor='add-genres'>Genre:</label>
-        <select className='button' id="add-genre" name="genre_id">
-          {booksData.genres.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
-        </select>
+          <label htmlFor='add-genres'>Genre:</label>
+          <select className='button' id="add-genre" name="genre_id">
+            {genres.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+          </select>
         </span>
         <span className='form-span'>
           <label htmlFor='add-language'>Language:</label>
           <select className='button' id="add-language" name="language_id">
-            {booksData.languages.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+            {languages.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
           </select>
         </span>
-        <input className='button' type='submit' value='Add book' />
+        <input id='submit-book' className='button' type='submit' value='Add book' />
       </form>
     </div>
   )
 }
 
 AddBookForm.propTypes = {
-  booksData: PropTypes.object
+  genres: PropTypes.array,
+  languages: PropTypes.array,
+  setBooks: PropTypes.func
 }
 
 export default AddBookForm

@@ -5,34 +5,52 @@
 }
 
 .app {
-  padding: 2rem;
+  padding: 0 10vw 0 10vw;
 }
 
 #header {
-  padding: 0 10vw 0 10vw;
   align-items: center;
   justify-content: space-between;
+  margin-left: 1rem;
+}
+
+#edit-container {
+  position: fixed;
+  background-color: rgba(97, 90, 90, 0.85);
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  z-index: 990;
 }
 
 #edit-book {
   padding: 0px 1rem 0px 1rem;
   background-color: grey;
   border: 2px black solid;
+  opacity: 1 !important;
   position: fixed;
-  top: 25%;
-  left: 25%;
-  width: 50%;
+  width: 20rem;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   z-index: 999;
-  justify-items: center;
+  align-items: center;
+  padding-bottom: 2rem;
 }
 
-#edit-book input, select {
+#edit-book .button, #edit-book select, #edit-book label {
   display: block;
   margin: 0.5rem 0px 0.5rem 0px;
+  width: 70%;
+  margin: 0 auto;
+  margin-top: 0.2rem;
 }
 
 #add-book-form form {
   align-items: center;
+  margin-bottom: 2rem;
+  margin-left: 1rem;
 }
 
 #add-book-form input, select {
@@ -45,17 +63,16 @@
   right: 0;
 }
 
-.form-span {
-  display: inline-block;
-}
-
 .form-span label {
   display: block;
+  margin-left: 0.5rem;
+}
+
+#submit-book {
+  margin-top: 1.3rem !important;
 }
 
 .button {
-  margin-left: 1rem;
-  margin-right: 1rem;
   width: 10rem;
   height: 2rem;
 }
@@ -88,8 +105,6 @@
   grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
   grid-gap: 16px;
   justify-items: center;
-
-  padding: 0 10vw 0 10vw;
 }
 
 .book-buttons {
