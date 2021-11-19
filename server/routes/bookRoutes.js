@@ -1,12 +1,13 @@
 import * as bookQueries from '../queries/bookQueries.js'
+import { isAuth } from './authMiddleWare.js'
 
 const bookRoutes = (app) => {
-  app.get('/books', bookQueries.getAllBooks)
-  app.get('/booksAlt', bookQueries.getAllBooksAlt)
-  app.get('/books/:id', bookQueries.getBookById)
-  app.post('/books', bookQueries.addBook)
-  app.put('/books/:id', bookQueries.updateBook)
-  app.delete('/books/:id', bookQueries.deleteBookById)
+  app.get('/books', isAuth, bookQueries.getAllBooks)
+  app.get('/booksAlt', isAuth, bookQueries.getAllBooksAlt)
+  app.get('/books/:id', isAuth, bookQueries.getBookById)
+  app.post('/books', isAuth, bookQueries.addBook)
+  app.put('/books/:id', isAuth, bookQueries.updateBook)
+  app.delete('/books/:id', isAuth, bookQueries.deleteBookById)
 }
 
 export default bookRoutes

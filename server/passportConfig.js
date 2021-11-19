@@ -44,12 +44,14 @@ const initialize = (passport) => {
   passport.serializeUser((user, done) => done(null, user.id))
 
   passport.deserializeUser((id, done) => {
-    db.query('SELECT * FROM user WHERE id = $1', [id], (error, results) => {
+    console.log('deserializing: ' + id)
+    db.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
       if (error) {
         throw error
       }
-
-      return done(null, results.rows[0])
+      const user = results.rows[0]
+      console.log('deserializing: ' + user)
+      return done(null, user)
     })
   })
 }

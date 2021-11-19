@@ -14,14 +14,14 @@ export const App = () => {
         <Router>
           <Routes>
               <Route path='/' element={<Register />}/>
+              <Route path='/login' element={<Login />}/>
               <Route
                 path='/books'
                 element={
-                    <RequireAuth>
-                      <Books />
-                    </RequireAuth>
+                  <RequireAuth>
+                    <Books />
+                  </RequireAuth>
                 }/>
-              <Route path='/login' element={<Login />}/>
           </Routes>
         </Router>
       </AuthProvider>

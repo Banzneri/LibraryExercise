@@ -28,7 +28,6 @@ const RegisterForm = () => {
 
   return (
     <div id='registerForm'>
-      {errors && errors.map(e => <p key={e.message}>{e.message}</p>)}
       <form onSubmit={(e) => onSubmit(e)}>
         <label htmlFor='user-name'> Name: </label>
         <input type='text' id='user-name' required />
@@ -40,6 +39,7 @@ const RegisterForm = () => {
         <input type='password' id='password2' required />
         <input type='submit' value='Submit'/>
       </form>
+      {errors && errors.map(e => <p key={e.message}>{e.message}</p>)}
     </div>
   )
 }

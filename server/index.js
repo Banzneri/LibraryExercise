@@ -13,16 +13,19 @@ const port = 3001
 const sessionOptions = {
   secret: 'secret',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: true,
+  cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }
 
 const corsOptions = {
-  origin: '*',
+  origin: 'http://localhost:3000',
   credentials: true,
-  optionSuccessStatus: 200
+  optionSuccessStatus: 200,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
 }
 
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(cors(corsOptions))
 app.use(session(sessionOptions))
 app.use(passport.initialize())

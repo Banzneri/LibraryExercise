@@ -4,7 +4,7 @@ const BASE_URL = 'http://localhost:3001'
 
 export const getBooks = (setBooks) => {
   axios
-    .get(`${BASE_URL}/books`)
+    .get(`${BASE_URL}/books`, { withCredentials: true })
     .then(books => {
       console.log(books.data)
       setBooks(books.data)
@@ -16,7 +16,7 @@ export const getBooks = (setBooks) => {
 
 export const getBooksAlt = (setBooks) => {
   axios
-    .get(`${BASE_URL}/booksAlt`)
+    .get(`${BASE_URL}/booksAlt`, { withCredentials: true })
     .then(books => {
       console.log(books.data)
       setBooks(books.data)
@@ -51,7 +51,7 @@ export const getLanguages = (setLanguages) => {
 export const removeBook = (event, id, setBooks) => {
   event.stopPropagation()
   axios
-    .delete(`${BASE_URL}/books/${id}`)
+    .delete(`${BASE_URL}/books/${id}`, { withCredentials: true })
     .then(e => {
       getBooks(setBooks)
       console.log(e)
@@ -64,7 +64,7 @@ export const removeBook = (event, id, setBooks) => {
 export const editBook = (book, setBooks) => {
   const bookToUpdate = book
   axios
-    .put(`${BASE_URL}/books/${book.id}`, bookToUpdate)
+    .put(`${BASE_URL}/books/${book.id}`, bookToUpdate, { withCredentials: true })
     .then(e => {
       getBooks(setBooks)
       console.log(e)
@@ -84,7 +84,7 @@ export const getVolumes = (setVolumes) => {
 
 export const addBook = (book, setBooks) => {
   axios
-    .post(`${BASE_URL}/books`, book)
+    .post(`${BASE_URL}/books`, book, { withCredentials: true })
     .then(e => {
       getBooks(setBooks)
       addVolume(e.data[0].id)
@@ -96,7 +96,7 @@ export const addBook = (book, setBooks) => {
 
 const addVolume = (id) => {
   axios
-    .post(`${BASE_URL}/volumes/${id}`)
+    .post(`${BASE_URL}/volumes/${id}`, { withCredentials: true })
     .then(e => {
       console.log(e)
     })

@@ -45,6 +45,7 @@ export const registerUser = async (request, response, next) => {
           errors.push({ message: 'User already exists' })
           response.status(409).json({ errors: errors })
         } else {
+          response.status(200).json({ message: 'User created' })
           addUser(name, email, hashedPassword)
         }
       }
@@ -52,6 +53,10 @@ export const registerUser = async (request, response, next) => {
   }
 }
 
-export const loginUser = (request, response) => {
-  response.status(200).json({ message: 'successful login' })
+export const loginSuccess = (request, response, next) => {
+  response.status(200).json({ message: 'login successful' })
+}
+
+export const loginFailed = (request, response) => {
+  response.status(400).json({ message: 'login failed' })
 }

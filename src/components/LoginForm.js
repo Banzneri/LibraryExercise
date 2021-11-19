@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../Auth.js'
 
 const LoginForm = () => {
+  const [message, setMessage] = useState(null)
   const navigate = useNavigate()
   const { authed, setAuthed } = useAuth()
 
@@ -16,11 +17,14 @@ const LoginForm = () => {
     }
 
     axios
-      .post('http://localhost:3001/users/login', user)
+      .post('http://localhost:3001/users/login', user, { withCredentials: true })
       .then(e => {
         setAuthed(true)
         console.log(authed)
         navigate('/books')
+      })
+      .catch(e => {
+        setMessage('wrong username or password')
       })
   }
 
@@ -33,6 +37,7 @@ const LoginForm = () => {
         <input type='password' id='password' required />
         <input type='submit' value='Submit'/>
       </form>
+      {message && <p>{message}</p>}
     </div>
   )
 }
