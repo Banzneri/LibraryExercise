@@ -45,7 +45,7 @@ export const BooksList = () => {
   return (
     <div>
       <AddBookForm genres={genres} languages={languages} setBooks={setBooks} />
-      <FilterBooks genres={genres} setBooks={setBooks}/>
+      <FilterBooks genres={genres} setBooks={setBooks} />
       <div className='grid-container' id='books-list'>
         {books && sortByNameAndReturnNew(books).map(b =>
           <Book

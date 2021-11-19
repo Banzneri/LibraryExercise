@@ -24,15 +24,15 @@ export const FilterBooks = ({ genres, setBooks }) => {
   }
 
   return (
-    <div className='flex-container'>
-      <input type='button' className='button' onClick={getAllBooks} value='Get all books'/>
-      <form onSubmit={e => onFilterSubmit(e)}>
+    <div className='flex-container' id='filter-books'>
+      <form onSubmit={e => onFilterSubmit(e)} id='filter-form'>
         <label htmlFor='filter-genre' />
         <select className='button' id="filter-genre" name="filter-genre">
           {genres.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
         </select>
         <input type='submit' className='button' value='Filter'/>
       </form>
+      <input type='button' className='button' onClick={getAllBooks} value='Get all books'/>
     </div>
   )
 }

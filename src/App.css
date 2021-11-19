@@ -14,6 +14,10 @@
   margin-left: 1rem;
 }
 
+#books-list {
+  padding-top: 3rem;
+}
+
 #edit-container {
   position: fixed;
   background-color: rgba(97, 90, 90, 0.85);
@@ -55,6 +59,30 @@
 
 #add-book-form input, select {
   margin: 0px 0.5rem 0px 0.5rem;
+}
+
+#filter-books {
+  padding: 0 1rem 0 1rem;
+}
+
+#filter-form {
+  padding-right: 1rem;
+}
+
+.auth-header {
+  align-items: center;
+}
+
+.auth-header h2 {
+  padding-right: 1rem;
+}
+
+#login-form {
+  padding-bottom: 1rem;
+}
+
+#register-form {
+  padding-bottom: 1rem;
 }
 
 #close-edit {

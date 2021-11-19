@@ -27,8 +27,12 @@ const RegisterForm = () => {
   }
 
   return (
-    <div id='registerForm'>
-      <form onSubmit={(e) => onSubmit(e)}>
+    <div id='register'>
+      <div className='flex-container auth-header'>
+        <h2>Register</h2>
+        |&nbsp;{errors && errors.map(e => <p key={e.message}>{e.message} &nbsp;|&nbsp;</p>)}
+      </div>
+      <form onSubmit={(e) => onSubmit(e)} id='register-form'>
         <label htmlFor='user-name'> Name: </label>
         <input type='text' id='user-name' required />
         <label htmlFor='email'> Email: </label>
@@ -39,7 +43,6 @@ const RegisterForm = () => {
         <input type='password' id='password2' required />
         <input type='submit' value='Submit'/>
       </form>
-      {errors && errors.map(e => <p key={e.message}>{e.message}</p>)}
     </div>
   )
 }

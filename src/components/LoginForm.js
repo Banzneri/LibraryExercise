@@ -29,15 +29,18 @@ const LoginForm = () => {
   }
 
   return (
-    <div id='login-form'>
-      <form onSubmit={(e) => onSubmit(e)}>
+    <div id='login'>
+      <div className='flex-container auth-header'>
+        <h2>Login</h2>
+        |&nbsp;{message && <p>{message}&nbsp;|&nbsp;</p>}
+      </div>
+      <form onSubmit={(e) => onSubmit(e)} id='login-form'>
         <label htmlFor='email'> Email: </label>
         <input type='email' id='email' required />
         <label htmlFor='password'> Password: </label>
         <input type='password' id='password' required />
         <input type='submit' value='Submit'/>
       </form>
-      {message && <p>{message}</p>}
     </div>
   )
 }
