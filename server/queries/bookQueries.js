@@ -29,6 +29,19 @@ export const getAllBooksAlt = (request, response) => {
   })
 }
 
+export const getBooksByGenreId = (request, response) => {
+  const query = 'SELECT * FROM books WHERE books.genre_id = $1'
+  const id = parseInt(request.params.id)
+
+  db.query(query, [id], (error, results) => {
+    if (error) {
+      console.log(error)
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
 export const getBookById = (request, response) => {
   const id = parseInt(request.params.id)
 

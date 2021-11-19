@@ -60,3 +60,8 @@ export const loginSuccess = (request, response, next) => {
 export const loginFailed = (request, response) => {
   response.status(400).json({ message: 'login failed' })
 }
+
+export const logout = (request, response) => {
+  request.logout()
+  response.status(200).json({ message: 'logout successful' })
+}

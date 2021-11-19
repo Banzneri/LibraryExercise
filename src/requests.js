@@ -94,7 +94,7 @@ export const addBook = (book, setBooks) => {
     })
 }
 
-const addVolume = (id) => {
+export const addVolume = (id) => {
   axios
     .post(`${BASE_URL}/volumes/${id}`, { withCredentials: true })
     .then(e => {
@@ -102,5 +102,16 @@ const addVolume = (id) => {
     })
     .catch(error => {
       console.log(error)
+    })
+}
+
+export const logout = () => {
+  axios
+    .get(`${BASE_URL}/users/logout`)
+    .then(e => {
+      console.log(e)
+    })
+    .catch(e => {
+      console.log(e)
     })
 }

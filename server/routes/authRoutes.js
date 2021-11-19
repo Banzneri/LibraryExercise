@@ -9,6 +9,7 @@ const authRoutes = (app, passport) => {
   }))
   app.get('/users/login/success', isAuth, authQueries.loginSuccess)
   app.get('/users/login/failed', authQueries.loginFailed)
+  app.get('/users/logout', isAuth, authQueries.logout)
 }
 
 export default authRoutes
