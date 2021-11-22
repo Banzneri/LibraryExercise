@@ -1,15 +1,16 @@
 import db from '../db.js'
 import bcrypt from 'bcrypt'
 
-const addUser = (name, email, password) => {
+const addUser = (response, request, name, email, password) => {
   const now = Date.now()
   // eslint-disable-next-line quotes
   const query = `INSERT INTO users (full_name, email, password, role, created_at) VALUES ($1, $2, $3, $4, to_timestamp(${now} / 1000.0)) RETURNING id, password`
   db.query(query, [name, email, password, 'REGULAR'], (error, results) => {
     if (error) {
-      throw error
+      response.status(500).json({ message: 'database error', error: error })
     } else {
       console.log(results.rows)
+      response.status(200).json({ message: 'User created' })
     }
   })
 }
@@ -45,8 +46,7 @@ export const registerUser = async (request, response, next) => {
           errors.push({ message: 'User already exists' })
           response.status(409).json({ errors: errors })
         } else {
-          response.status(200).json({ message: 'User created' })
-          addUser(name, email, hashedPassword)
+          addUser(response, request, name, email, hashedPassword)
         }
       }
     })

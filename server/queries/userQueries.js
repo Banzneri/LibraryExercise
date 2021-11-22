@@ -12,3 +12,15 @@ export const getAllUsers = (request, response, next) => {
     }
   })
 }
+
+export const getUserById = (request, response, next) => {
+  const id = parseInt(request.params.id)
+  const query = 'SELECT * FROM users WHERE id = $1'
+
+  db.query(query, [id], (error, results) => {
+    if (error) {
+      response.status(500).json({ message: 'database error', error: error })
+    }
+    response.status(200).json(results.rows)
+  })
+}
