@@ -5,7 +5,7 @@ export const getAllBorrows = (request, response) => {
 
   db.query(query, (error, results) => {
     if (error) {
-      throw error
+      response.status(500).json({ message: 'database error', error: error })
     }
     response.status(200).json(results.rows)
   })
@@ -16,7 +16,7 @@ export const getBorrowById = (request, response) => {
 
   db.query('SELECT * FROM borrows WHERE id = $1', [id], (error, results) => {
     if (error) {
-      throw error
+      response.status(500).json({ message: 'database error', error: error })
     }
     response.status(200).json(results.rows)
   })
@@ -27,7 +27,7 @@ export const getBorrowsByUserId = (request, response) => {
 
   db.query('SELECT * FROM borrows WHERE user_id = $1', [id], (error, results) => {
     if (error) {
-      throw error
+      response.status(500).json({ message: 'database error', error: error })
     }
     response.status(200).json(results.rows)
   })
@@ -38,7 +38,7 @@ export const getBorrowByVolumeId = (request, response) => {
 
   db.query('SELECT * FROM borrows WHERE volume_id = $1', [id], (error, results) => {
     if (error) {
-      throw error
+      response.status(500).json({ message: 'database error', error: error })
     }
     response.status(200).json(results.rows)
   })

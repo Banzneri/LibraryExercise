@@ -8,7 +8,7 @@ export const getAllBooks = (request, response) => {
   db.query(query, (error, results) => {
     if (error) {
       console.log(error)
-      throw error
+      response.status(500).json({ message: 'database error', error: error })
     }
     response.status(200).json(results.rows)
   })
@@ -23,7 +23,7 @@ export const getAllBooksAlt = (request, response) => {
   db.query(query, (error, results) => {
     if (error) {
       console.log(error)
-      throw error
+      response.status(500).json({ message: 'database error' })
     }
     response.status(200).json(results.rows)
   })
@@ -36,7 +36,7 @@ export const getBooksByGenreId = (request, response) => {
   db.query(query, [id], (error, results) => {
     if (error) {
       console.log(error)
-      throw error
+      response.status(500).json({ message: 'database error', error: error })
     }
     response.status(200).json(results.rows)
   })
@@ -47,7 +47,7 @@ export const getBookById = (request, response) => {
 
   db.query('SELECT * FROM books WHERE id = $1', [id], (error, results) => {
     if (error) {
-      throw error
+      response.status(500).json({ message: 'database error', error: error })
     }
     response.status(200).json(results.rows)
   })
@@ -60,7 +60,7 @@ export const addBook = (request, response) => {
 
   db.query(query, [name, releaseYear, genreId, languageId], (error, results) => {
     if (error) {
-      throw error
+      response.status(500).json({ message: 'database error', error: error })
     }
     console.log('returning ' + results.rows)
     response.status(200).json(results.rows)
@@ -76,7 +76,7 @@ export const updateBook = (request, response) => {
     [name, releaseYear, genreId, languageId, id],
     (error, results) => {
       if (error) {
-        throw error
+        response.status(500).json({ message: 'database error', error: error })
       }
       response.status(200).send(`Book modified with ID: ${id}`)
     }
@@ -90,7 +90,7 @@ export const deleteBookById = (request, response) => {
     'DELETE FROM books WHERE id = $1 RETURNING books', [id],
     (error, results) => {
       if (error) {
-        throw error
+        response.status(500).json({ message: 'database error', error: error })
       }
       response.status(200).send(`Book deleted with ID: ${id}`)
     }

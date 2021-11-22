@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../Auth.js'
 
 const LoginForm = () => {
-  const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
   const navigate = useNavigate()
   const { authed, setAuthed } = useAuth()
 
@@ -24,7 +24,7 @@ const LoginForm = () => {
         navigate('/books')
       })
       .catch(e => {
-        setMessage('wrong username or password')
+        setErrorMessage('wrong username or password')
       })
   }
 
@@ -32,7 +32,11 @@ const LoginForm = () => {
     <div id='login'>
       <div className='flex-container auth-header'>
         <h2>Login</h2>
-        |&nbsp;{message && <p>{message}&nbsp;|&nbsp;</p>}
+        |&nbsp;
+        {errorMessage &&
+          <span className='error-message'>
+            <p className='line'>{errorMessage}&nbsp;|&nbsp;</p>
+          </span>}
       </div>
       <form onSubmit={(e) => onSubmit(e)} id='login-form'>
         <label htmlFor='email'> Email: </label>

@@ -30,7 +30,7 @@ const RegisterForm = () => {
     <div id='register'>
       <div className='flex-container auth-header'>
         <h2>Register</h2>
-        |&nbsp;{errors && errors.map(e => <p key={e.message}>{e.message} &nbsp;|&nbsp;</p>)}
+        |&nbsp;{errors && errors.map(e => <p className='error-message' key={e.message}>{e.message} &nbsp;|&nbsp;</p>)}
       </div>
       <form onSubmit={(e) => onSubmit(e)} id='register-form'>
         <label htmlFor='user-name'> Name: </label>

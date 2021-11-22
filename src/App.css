@@ -77,6 +77,14 @@
   padding-right: 1rem;
 }
 
+.error-message {
+  color: rgb(233, 6, 6);
+}
+
+.line {
+  color: white;
+}
+
 #login-form {
   padding-bottom: 1rem;
 }

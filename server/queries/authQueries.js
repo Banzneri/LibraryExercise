@@ -39,7 +39,7 @@ export const registerUser = async (request, response, next) => {
 
     db.query(query, [email], (error, results) => {
       if (error) {
-        throw error
+        response.status(400).json({ message: 'database error' })
       } else {
         if (results.rows.length > 0) {
           errors.push({ message: 'User already exists' })
