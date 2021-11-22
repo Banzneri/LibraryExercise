@@ -30,9 +30,9 @@ export const FilterBooks = ({ genres, setBooks }) => {
         <select className='button' id="filter-genre" name="filter-genre">
           {genres.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
         </select>
-        <input type='submit' className='button' value='Filter'/>
+        <input type='submit' className='button' value='Filter' />
       </form>
-      <input type='button' className='button' onClick={getAllBooks} value='Get all books'/>
+      <input type='button' className='button' onClick={getAllBooks} value='Get all books' />
     </div>
   )
 }
