@@ -4,6 +4,7 @@ import BookEdit from './BookEdit'
 import AddBookForm from './AddBookForm'
 import { FilterBooks } from './FilterBooks'
 import * as requests from '../requests.js'
+import { useBooks } from '../contexts/BooksContext'
 
 const sortByNameAndReturnNew = (booksToSort) => {
   const sortedBooks = Array.from(booksToSort)
@@ -25,10 +26,8 @@ const sortByNameAndReturnNew = (booksToSort) => {
 }
 
 export const BooksList = () => {
-  const [books, setBooks] = useState([])
-  const [genres, setGenres] = useState([])
-  const [languages, setLanguages] = useState([])
-  const [volumes, setVolumes] = useState([])
+  const { books, languages, genres, volumes } = useBooks()
+  const { setBooks, setLanguages, setGenres, setVolumes } = useBooks()
   const [selectedBook, setSelectedBook] = useState(null)
 
   useEffect(() => {

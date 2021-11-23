@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../Auth.js'
+import { useAuth } from '../contexts/AuthContext.js'
 import { BASE_URL } from '../constants.js'
 
 const LoginForm = () => {

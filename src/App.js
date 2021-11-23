@@ -1,14 +1,17 @@
 import React from 'react'
 import './App.css'
 import { Routes } from './routes/Routes'
-import { AuthProvider } from './Auth'
+import { AuthProvider } from './contexts/AuthContext'
+import { BooksProvider } from './contexts/BooksContext'
 
 export const App = () => {
   return (
     <div className='app'>
-      <AuthProvider>
-        <Routes />
-      </AuthProvider>
+      <BooksProvider>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
+      </BooksProvider>
     </div>
   )
 }

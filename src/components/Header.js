@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { useAuth } from '../Auth'
+import { useAuth } from '../contexts/AuthContext.js'
 import { useNavigate } from 'react-router-dom'
 import { BASE_URL } from '../constants'
 
