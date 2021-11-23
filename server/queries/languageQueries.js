@@ -1,21 +1,18 @@
 import db from '../db.js'
+import { handleQueryResults, sendBadRequest, validateNumber } from './utils.js'
 
 export const getLanguages = (request, response) => {
-  db.query('SELECT * FROM languages', (error, results) => {
-    if (error) {
-      response.status(500).json({ message: 'database error', error: error })
-    }
-    response.status(200).json(results.rows)
-  })
+  db.query('SELECT * FROM languages', (error, results) =>
+    handleQueryResults(error, results, response))
 }
 
 export const getLanguageById = (request, response) => {
   const id = parseInt(request.params.id)
 
-  db.query('SELECT * FROM languages WHERE id = $1', [id], (error, results) => {
-    if (error) {
-      response.status(500).json({ message: 'database error', error: error })
-    }
-    response.status(200).json(results.rows)
-  })
+  if (!validateNumber(id)) {
+    sendBadRequest('Bad request', response)
+  }
+
+  db.query('SELECT * FROM languages WHERE id = $1', [id], (error, results) =>
+    handleQueryResults(error, results, response))
 }

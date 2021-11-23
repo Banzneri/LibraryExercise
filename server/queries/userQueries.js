@@ -1,26 +1,22 @@
 import db from '../db.js'
+import { handleQueryResults, sendBadRequest, validateNumber } from './utils.js'
 
 export const getAllUsers = (request, response, next) => {
   const query = 'SELECT * FROM users'
 
-  db.query(query, (error, results) => {
-    if (error) {
-      console.log(error)
-      next(error)
-    } else {
-      response.status(200).json(results.rows)
-    }
-  })
+  db.query(query, (error, results) =>
+    handleQueryResults(error, results, response))
 }
 
 export const getUserById = (request, response, next) => {
   const id = parseInt(request.params.id)
+
+  if (!validateNumber(id)) {
+    sendBadRequest('Bad request', response)
+  }
+
   const query = 'SELECT * FROM users WHERE id = $1'
 
-  db.query(query, [id], (error, results) => {
-    if (error) {
-      response.status(500).json({ message: 'database error', error: error })
-    }
-    response.status(200).json(results.rows)
-  })
+  db.query(query, [id], (error, results) =>
+    handleQueryResults(error, results, response))
 }
