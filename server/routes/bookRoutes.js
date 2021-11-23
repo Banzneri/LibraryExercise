@@ -1,4 +1,4 @@
-import * as bookQueries from '../queries/bookQueries.js'
+import * as bookQueries from '../controllers/bookController.js'
 import { isAuth, isAdmin } from './authMiddleWare.js'
 
 const bookRoutes = (app) => {

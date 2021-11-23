@@ -1,4 +1,4 @@
-import * as authQueries from '../queries/authQueries.js'
+import * as authQueries from '../controllers/authController.js'
 import { isAuth } from './authMiddleWare.js'
 
 const authRoutes = (app, passport) => {

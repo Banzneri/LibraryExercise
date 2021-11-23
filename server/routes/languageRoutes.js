@@ -1,4 +1,4 @@
-import * as languageQueries from '../queries/languageQueries.js'
+import * as languageQueries from '../controllers/languageController.js'
 
 const languageRoutes = (app) => {
   app.get('/languages', languageQueries.getLanguages)

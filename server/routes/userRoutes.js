@@ -1,4 +1,4 @@
-import * as userQueries from '../queries/userQueries.js'
+import * as userQueries from '../controllers/userController.js'
 import { isAdmin } from './authMiddleWare'
 
 const userRoutes = (app) => {

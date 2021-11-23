@@ -1,4 +1,4 @@
-import * as volumeQueries from '../queries/volumeQueries.js'
+import * as volumeQueries from '../controllers/volumeController.js'
 
 const volumeRoutes = (app) => {
   app.get('/volumes', volumeQueries.getAllVolumes)

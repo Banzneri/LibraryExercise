@@ -1,4 +1,4 @@
-import * as genreQueries from '../queries/genreQueries.js'
+import * as genreQueries from '../controllers/genreController.js'
 
 const genreRoutes = (app) => {
   app.get('/genres', genreQueries.getGenres)

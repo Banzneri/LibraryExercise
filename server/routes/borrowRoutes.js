@@ -1,4 +1,4 @@
-import * as borrowQueries from '../queries/borrowQueries.js'
+import * as borrowQueries from '../controllers/borrowController.js'
 import { isAuth, isAdmin } from './authMiddleWare.js'
 
 const borrowRoutes = (app) => {
