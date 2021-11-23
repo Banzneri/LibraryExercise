@@ -63,7 +63,7 @@ export const BooksList = () => {
           genres={genres}
           languages={languages}
           setSelectedBook={setSelectedBook}
-          setBooks={setBooks}/>
+          setBooks={setBooks} />
         }
       </div>
     </div>

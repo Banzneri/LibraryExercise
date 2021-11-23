@@ -1,18 +1,22 @@
 import db from '../db.js'
 import bcrypt from 'bcrypt'
+import {
+  handleQueryResults,
+  sendBadRequest,
+  sendConflict,
+  sendInternalServerError,
+  validateRegister
+} from './utils.js'
 
 const addUser = (response, request, name, email, password) => {
   const now = Date.now()
-  // eslint-disable-next-line quotes
-  const query = `INSERT INTO users (full_name, email, password, role, created_at) VALUES ($1, $2, $3, $4, to_timestamp(${now} / 1000.0)) RETURNING id, password`
-  db.query(query, [name, email, password, 'REGULAR'], (error, results) => {
-    if (error) {
-      response.status(500).json({ message: 'database error', error: error })
-    } else {
-      console.log(results.rows)
-      response.status(200).json({ message: 'User created' })
-    }
-  })
+
+  const query = `INSERT INTO users (full_name, email, password, role, created_at) 
+                 VALUES ($1, $2, $3, $4, to_timestamp(${now} / 1000.0)) 
+                 RETURNING id, password`
+
+  db.query(query, [name, email, password, 'REGULAR'], (error, results) =>
+    handleQueryResults(error, results, response))
 }
 
 export const registerUser = async (request, response, next) => {
@@ -20,48 +24,35 @@ export const registerUser = async (request, response, next) => {
 
   const errors = []
 
-  if (!name || !email || !password || !password2) {
-    errors.push({ message: 'Please enter all fields' })
+  if (!validateRegister(name, email, password, password2)) {
+    sendBadRequest('Missing parameters', response)
   }
 
-  if (password.length < 6) {
-    errors.push({ message: 'Password needs to be at least 6 characters' })
-  }
+  const hashedPassword = await bcrypt.hash(password, 10)
+  const query = 'SELECT * FROM users WHERE email = $1'
 
-  if (password !== password2) {
-    errors.push({ message: 'Passwords do not match' })
-  }
+  db.query(query, [email], (error, results) => {
+    if (error) {
+      sendInternalServerError(error.message, response)
+    }
 
-  if (errors.length > 0) {
-    response.status(400).json({ errors: errors })
-  } else {
-    const query = 'SELECT * FROM users WHERE email = $1'
-    const hashedPassword = await bcrypt.hash(password, 10)
-
-    db.query(query, [email], (error, results) => {
-      if (error) {
-        response.status(400).json({ message: 'database error' })
-      } else {
-        if (results.rows.length > 0) {
-          errors.push({ message: 'User already exists' })
-          response.status(409).json({ errors: errors })
-        } else {
-          addUser(response, request, name, email, hashedPassword)
-        }
-      }
-    })
-  }
+    if (results.rows.length > 0) {
+      sendConflict(errors, response)
+    } else {
+      addUser(response, request, name, email, hashedPassword)
+    }
+  })
 }
 
 export const loginSuccess = (request, response, next) => {
-  response.status(200).json({ message: 'login successful' })
+  response.status(200).json({ message: 'Login successful' })
 }
 
 export const loginFailed = (request, response) => {
-  response.status(400).json({ message: 'login failed' })
+  sendBadRequest('User not found', response)
 }
 
 export const logout = (request, response) => {
   request.logout()
-  response.status(200).json({ message: 'logout successful' })
+  response.status(200).json({ message: 'Logout successful' })
 }

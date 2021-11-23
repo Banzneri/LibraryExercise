@@ -1,98 +1,88 @@
-/* eslint-disable camelcase */
-/* eslint-disable quotes */
 import db from '../db.js'
+import { handleQueryResults, sendBadRequest, validateBook, validateNumber } from './utils.js'
 
 export const getAllBooks = (request, response) => {
-  const query = `SELECT books.id, books.name, books.release_year, books.genre_id, books.language_id FROM books`
+  const query = 'SELECT id, name, release_year, genre_id, language_id FROM books'
 
-  db.query(query, (error, results) => {
-    if (error) {
-      console.log(error)
-      response.status(500).json({ message: 'database error', error: error })
-    }
-    response.status(200).json(results.rows)
-  })
+  db.query(query, (error, results) =>
+    handleQueryResults(error, results, response))
 }
 
 export const getAllBooksAlt = (request, response) => {
   const query = `SELECT books.id, books.name, books.release_year, genres.name, languages.name 
-                  FROM books 
-                  INNER JOIN genres ON books.genre_id = genres.id
-                  INNER JOIN languages ON books.language_id = languages.id`
+                 FROM books 
+                 INNER JOIN genres ON books.genre_id = genres.id
+                 INNER JOIN languages ON books.language_id = languages.id`
 
-  db.query(query, (error, results) => {
-    if (error) {
-      console.log(error)
-      response.status(500).json({ message: 'database error' })
-    }
-    response.status(200).json(results.rows)
-  })
+  db.query(query, (error, results) =>
+    handleQueryResults(error, results, response))
 }
 
 export const getBooksByGenreId = (request, response) => {
-  const query = 'SELECT * FROM books WHERE books.genre_id = $1'
   const id = parseInt(request.params.id)
+  const query = 'SELECT * FROM books WHERE books.genre_id = $1'
 
-  db.query(query, [id], (error, results) => {
-    if (error) {
-      console.log(error)
-      response.status(500).json({ message: 'database error', error: error })
-    }
-    response.status(200).json(results.rows)
-  })
+  if (!validateNumber(id)) {
+    sendBadRequest('Bad request', response)
+  }
+
+  db.query(query, [id], (error, results) =>
+    handleQueryResults(error, results, response))
 }
 
 export const getBookById = (request, response) => {
   const id = parseInt(request.params.id)
+  const query = 'SELECT * FROM books WHERE id = $1'
 
-  db.query('SELECT * FROM books WHERE id = $1', [id], (error, results) => {
-    if (error) {
-      response.status(500).json({ message: 'database error', error: error })
-    }
-    response.status(200).json(results.rows)
-  })
+  if (!validateNumber(id)) {
+    sendBadRequest('Bad request', response)
+  }
+
+  db.query(query, [id], (error, results) =>
+    handleQueryResults(error, results, response))
 }
 
 export const addBook = (request, response) => {
   const { name, releaseYear, genreId, languageId } = request.body
-  const query = `INSERT INTO books (name, release_year, genre_id, language_id) 
-                    VALUES ($1, $2, $3, $4) RETURNING id`
 
-  db.query(query, [name, releaseYear, genreId, languageId], (error, results) => {
-    if (error) {
-      response.status(500).json({ message: 'database error', error: error })
-    }
-    console.log('returning ' + results.rows)
-    response.status(200).json(results.rows)
-  })
+  if (!validateBook(name, releaseYear, genreId, languageId)) {
+    sendBadRequest('Bad request', response)
+  }
+
+  const query = `INSERT INTO books
+                 (name, release_year, genre_id, language_id)
+                 VALUES ($1, $2, $3, $4) RETURNING id`
+
+  db.query(query, [name, releaseYear, genreId, languageId], (error, results) =>
+    handleQueryResults(error, results, response))
 }
 
 export const updateBook = (request, response) => {
   const id = parseInt(request.params.id)
   const { name, releaseYear, genreId, languageId } = request.body
 
-  db.query(
-    'UPDATE books SET name = $1, release_year = $2, genre_id = $3, language_id = $4 WHERE id = $5',
-    [name, releaseYear, genreId, languageId, id],
-    (error, results) => {
-      if (error) {
-        response.status(500).json({ message: 'database error', error: error })
-      }
-      response.status(200).send(`Book modified with ID: ${id}`)
-    }
-  )
+  if (!validateBook(name, releaseYear, genreId, languageId) ||
+      !validateNumber(id)) {
+    sendBadRequest('Bad request', response)
+  }
+
+  const query = `UPDATE books 
+                 SET name = $1, release_year = $2, genre_id = $3, language_id = $4 
+                 WHERE id = $5`
+
+  db.query(query, [name, releaseYear, genreId, languageId, id],
+    (error, results) => handleQueryResults(error, results, response))
 }
 
 export const deleteBookById = (request, response) => {
   const id = parseInt(request.params.id)
 
-  db.query(
-    'DELETE FROM books WHERE id = $1 RETURNING books', [id],
-    (error, results) => {
-      if (error) {
-        response.status(500).json({ message: 'database error', error: error })
-      }
-      response.status(200).send(`Book deleted with ID: ${id}`)
-    }
-  )
+  if (!validateNumber(id)) {
+    sendBadRequest('Bad request', response)
+  }
+
+  const query = 'DELETE FROM books WHERE id = $1 RETURNING books'
+
+  db.query(query, [id], (error, results) =>
+    handleQueryResults(error, results, response))
 }

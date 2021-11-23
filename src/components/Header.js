@@ -2,14 +2,16 @@ import React from 'react'
 import axios from 'axios'
 import { useAuth } from '../Auth'
 import { useNavigate } from 'react-router-dom'
+import { BASE_URL } from '../constants'
 
 export const Header = () => {
   const { setAuthed } = useAuth()
   const navigate = useNavigate()
 
-  const onClick = () => {
+  const logOut = () => {
     axios
-      .get('http://localhost:3001/users/logout', { withCredentials: true })
+      // eslint-disable-next-line quotes
+      .get(`${BASE_URL}/users/logout`, { withCredentials: true })
       .then(e => {
         setAuthed(false)
         navigate('/login')
@@ -20,7 +22,7 @@ export const Header = () => {
   return (
     <div className='flex-container' id='header'>
       <h1>Books</h1>
-      <input type='button' className='button' onClick={onClick} value='Log out' />
+      <input type='button' className='button' onClick={logOut} value='Log out' />
     </div>
   )
 }

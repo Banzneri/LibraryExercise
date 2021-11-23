@@ -2,6 +2,7 @@
 import React from 'react'
 import axios from 'axios'
 import PropTypes from 'prop-types'
+import { BASE_URL } from '../constants.js'
 
 export const FilterBooks = ({ genres, setBooks }) => {
   const onFilterSubmit = (e) => {
@@ -9,7 +10,7 @@ export const FilterBooks = ({ genres, setBooks }) => {
     const genre_id = e.target[0].value
 
     axios
-      .get(`http://localhost:3001/books/genres/${genre_id}`, { withCredentials: true })
+      .get(`${BASE_URL}/books/genres/${genre_id}`, { withCredentials: true })
       .then(e => {
         setBooks(e.data)
       })
@@ -17,7 +18,7 @@ export const FilterBooks = ({ genres, setBooks }) => {
 
   const getAllBooks = () => {
     axios
-      .get('http://localhost:3001/books', { withCredentials: true })
+      .get(`${BASE_URL}/books`, { withCredentials: true })
       .then(e => {
         setBooks(e.data)
       })

@@ -1,26 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../Auth.js'
+import { BASE_URL } from '../constants.js'
 
 const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState(null)
-  const [user, setUser] = useState(null)
   const navigate = useNavigate()
-  const { authed, setAuthed } = useAuth()
-
-  useEffect(() => {
-    axios
-      .post('http://localhost:3001/users/login', user, { withCredentials: true })
-      .then(e => {
-        setAuthed(true)
-        console.log(authed)
-        navigate('/books')
-      })
-      .catch(e => {
-        setErrorMessage('wrong username or password')
-      })
-  }, [user])
+  const { setAuthed } = useAuth()
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -30,7 +17,15 @@ const LoginForm = () => {
       password: e.target[1].value
     }
 
-    setUser(user)
+    axios
+      .post(`${BASE_URL}/users/login`, user, { withCredentials: true })
+      .then(e => {
+        setAuthed(true)
+        navigate('/books')
+      })
+      .catch(e => {
+        setErrorMessage('wrong username or password')
+      })
   }
 
   return (
