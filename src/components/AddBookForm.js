@@ -1,8 +1,10 @@
 import React from 'react'
 import * as requests from '../requests.js'
-import PropTypes from 'prop-types'
+import { useBooks } from '../contexts/BooksContext.js'
 
-const AddBookForm = ({ genres, languages, setBooks }) => {
+const AddBookForm = () => {
+  const { genres, languages, setBooks } = useBooks()
+
   const onSubmit = (e) => {
     e.preventDefault()
     const name = e.target[0].value
@@ -47,12 +49,6 @@ const AddBookForm = ({ genres, languages, setBooks }) => {
       </form>
     </div>
   )
-}
-
-AddBookForm.propTypes = {
-  genres: PropTypes.array,
-  languages: PropTypes.array,
-  setBooks: PropTypes.func
 }
 
 export default AddBookForm

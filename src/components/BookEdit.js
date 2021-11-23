@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import * as requests from '../requests.js'
+import { useBooks } from '../contexts/BooksContext.js'
 
-const BookEdit = ({ book, genres, languages, setSelectedBook, setBooks }) => {
+const BookEdit = ({ book, setSelectedBook }) => {
+  const { genres, languages, setBooks } = useBooks()
+
   useEffect(() => {
     document.body.style.overflow = 'hidden'
   }, [])
@@ -33,11 +36,13 @@ const BookEdit = ({ book, genres, languages, setSelectedBook, setBooks }) => {
           <input className='button' type='year' id='edit-year' defaultValue={book.release_year} required/>
           <label htmlFor='edit-genre'> Genre: </label>
           <select className='button' id="edit-genre" name="edit-genre" defaultValue={book.genre_id}>
-            {genres.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+            {genres.map(e =>
+              <option key={e.id} value={e.id}>{e.name}</option>)}
           </select>
           <label htmlFor='edit-language'> Language: </label>
           <select className='button' id="edit-language" name="edit-languages" defaultValue={book.language_id}>
-            {languages.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+            {languages.map(e =>
+              <option key={e.id} value={e.id}>{e.name}</option>)}
           </select>
           {/* <label htmlFor='edit-volume'> Quantity: </label>
           <input type='text' id='edit-volume' defaultValue={getQuantity()} required/> */}
@@ -51,10 +56,7 @@ const BookEdit = ({ book, genres, languages, setSelectedBook, setBooks }) => {
 
 BookEdit.propTypes = {
   book: PropTypes.object,
-  genres: PropTypes.array,
-  languages: PropTypes.array,
-  setSelectedBook: PropTypes.func,
-  setBooks: PropTypes.func
+  setSelectedBook: PropTypes.func
 }
 
 export default BookEdit

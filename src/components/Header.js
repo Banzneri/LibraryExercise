@@ -19,10 +19,17 @@ export const Header = () => {
       })
   }
 
+  const admin = () => {
+    navigate('/admin')
+  }
+
   return (
     <div className='flex-container' id='header'>
       <h1>Books</h1>
-      <input type='button' className='button' onClick={logOut} value='Log out' />
+      <div className='flex-container'>
+        <input type='button' className='button' onClick={admin} value='Admin' />
+        <input type='button' className='button' onClick={logOut} value='Log out' />
+      </div>
     </div>
   )
 }

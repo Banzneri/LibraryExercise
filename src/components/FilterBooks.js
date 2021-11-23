@@ -3,8 +3,11 @@ import React from 'react'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import { BASE_URL } from '../constants.js'
+import { useBooks } from '../contexts/BooksContext.js'
 
-export const FilterBooks = ({ genres, setBooks }) => {
+export const FilterBooks = () => {
+  const { genres, setBooks } = useBooks()
+
   const onFilterSubmit = (e) => {
     e.preventDefault()
     const genre_id = e.target[0].value

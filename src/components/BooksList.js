@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Book from './Book'
 import BookEdit from './BookEdit'
-import AddBookForm from './AddBookForm'
 import { FilterBooks } from './FilterBooks'
 import * as requests from '../requests.js'
 import { useBooks } from '../contexts/BooksContext'
@@ -43,8 +42,7 @@ export const BooksList = () => {
 
   return (
     <div>
-      <AddBookForm genres={genres} languages={languages} setBooks={setBooks} />
-      <FilterBooks genres={genres} setBooks={setBooks} />
+      <FilterBooks />
       <div className='grid-container' id='books-list'>
         {books && sortByNameAndReturnNew(books).map(b =>
           <Book
@@ -59,10 +57,7 @@ export const BooksList = () => {
         )}
         {selectedBook && <BookEdit
           book={selectedBook}
-          genres={genres}
-          languages={languages}
-          setSelectedBook={setSelectedBook}
-          setBooks={setBooks} />
+          setSelectedBook={setSelectedBook} />
         }
       </div>
     </div>
