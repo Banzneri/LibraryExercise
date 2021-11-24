@@ -1,19 +1,19 @@
 import { MINIMUN_PASSWORD_LENGTH, statusCodes } from '../../src/constants.js'
 
 export const sendBadRequest = (message, response) => {
-  response.status(statusCodes.BAD_REQUEST).json(message)
+  return response.status(statusCodes.BAD_REQUEST).json(message)
 }
 
 export const sendInternalServerError = (message, response) => {
-  response.status(statusCodes.INTERNAL_SERVER_ERROR).json(message)
+  return response.status(statusCodes.INTERNAL_SERVER_ERROR).json(message)
 }
 
 export const sendNotFound = (message, response) => {
-  response.status(statusCodes.NOT_FOUND).json(message)
+  return response.status(statusCodes.NOT_FOUND).json(message)
 }
 
 export const sendConflict = (message, response) => {
-  response.status(statusCodes.CONFLICT).json(message)
+  return response.status(statusCodes.CONFLICT).json(message)
 }
 
 export const validateString = (string) => {
@@ -28,7 +28,7 @@ export const handleQueryResults = (error, results, response) => {
   if (error) {
     sendInternalServerError(error.message)
   }
-  response.status(200).json(results.rows)
+  return response.status(200).json(results.rows)
 }
 
 export const validateBook = (name, releaseYear, genreId, languageId) => {
@@ -37,17 +37,9 @@ export const validateBook = (name, releaseYear, genreId, languageId) => {
 }
 
 export const validateRegister = (name, email, password, password2) => {
-  if (!name || !email || !password || !password2) {
-    return false
-  }
+  const missingParameters = !name || !email || !password || !password2
+  const passwordTooShort = password.length < MINIMUN_PASSWORD_LENGTH
+  const differentPasswords = password !== password2
 
-  if (password.length < MINIMUN_PASSWORD_LENGTH) {
-    return false
-  }
-
-  if (password !== password2) {
-    return false
-  }
-
-  return true
+  return !missingParameters && !passwordTooShort && !differentPasswords
 }

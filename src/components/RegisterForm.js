@@ -1,9 +1,16 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { Col, Container, Form, Row } from 'react-bootstrap'
+import { EmailInput } from './Forms/EmailInput'
+import { PasswordInput } from './Forms/PasswordInput'
+import { SubmitLinkPair } from './Forms/SubmitLinkPair'
+import { Errors } from './Forms/Errors'
+import { TextForm } from './Forms/TextForm'
+import { LoremIpsum } from './LoremIpsum'
 
 const RegisterForm = () => {
-  const [errors, setErrors] = useState([])
+  const [errors, setErrors] = useState('')
   const navigate = useNavigate()
 
   const onSubmit = (e) => {
@@ -22,28 +29,34 @@ const RegisterForm = () => {
         navigate('/login')
       })
       .catch(error => {
-        setErrors(error.response.data.errors)
+        console.log(error)
+        const messages = error.response.data
+        setErrors(messages)
       })
   }
 
+  const Title = () => <h2 style={{ marginBottom: '2rem' }}>Register</h2>
+
   return (
-    <div id='register'>
-      <div className='flex-container auth-header'>
-        <h2>Register</h2>
-        |&nbsp;{errors && errors.map(e => <p className='error-message' key={e.message}>{e.message} &nbsp;|&nbsp;</p>)}
-      </div>
-      <form onSubmit={(e) => onSubmit(e)} id='register-form'>
-        <label htmlFor='user-name'> Name: </label>
-        <input type='text' id='user-name' required />
-        <label htmlFor='email'> Email: </label>
-        <input type='email' id='email' required />
-        <label htmlFor='password'> Password: </label>
-        <input type='password' id='password' required />
-        <label htmlFor='password2'> Confirm password: </label>
-        <input type='password' id='password2' required />
-        <input type='submit' value='Submit'/>
-      </form>
-    </div>
+    <Form onSubmit={(e) => onSubmit(e)}>
+      <Container style={{ paddingTop: '5rem' }}>
+        <Row>
+          <Col md={4} style={{ marginBottom: '5rem' }}>
+            <Title />
+            <TextForm text='Name' />
+            <EmailInput />
+            <PasswordInput />
+            <PasswordInput id='password2'/>
+            <SubmitLinkPair url='/login' linkText='Log in' submitText='Register'/>
+          </Col>
+          <Col md={2} />
+          <Col md={6}>
+            <LoremIpsum />
+          </Col>
+        </Row>
+      </Container>
+      <Errors errorMessages={errors} />
+    </Form>
   )
 }
 

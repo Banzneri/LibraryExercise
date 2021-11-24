@@ -1,8 +1,9 @@
 import React from 'react'
 import { Form } from 'react-bootstrap'
+import PropTypes from 'prop-types'
 
-export const PasswordInput = () => (
-  <Form.Group className="mb-3" controlId="password">
+export const PasswordInput = ({ id = 'password' }) => (
+  <Form.Group className="mb-3" controlId={id}>
     <Form.Label>Password</Form.Label>
     <Form.Control type="password" />
     <Form.Text className="text-muted">
@@ -10,3 +11,7 @@ export const PasswordInput = () => (
     </Form.Text>
   </Form.Group>
 )
+
+PasswordInput.propTypes = {
+  id: PropTypes.string
+}

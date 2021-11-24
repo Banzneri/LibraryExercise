@@ -25,7 +25,7 @@ export const registerUser = async (request, response, next) => {
   const errors = []
 
   if (!validateRegister(name, email, password, password2)) {
-    sendBadRequest('Missing parameters', response)
+    return sendBadRequest('Can\'t register user', response)
   }
 
   const hashedPassword = await bcrypt.hash(password, 10)
@@ -33,11 +33,11 @@ export const registerUser = async (request, response, next) => {
 
   db.query(query, [email], (error, results) => {
     if (error) {
-      sendInternalServerError(error.message, response)
+      return sendInternalServerError(error.message, response)
     }
 
     if (results.rows.length > 0) {
-      sendConflict(errors, response)
+      return sendConflict(errors, response)
     } else {
       addUser(response, request, name, email, hashedPassword)
     }
