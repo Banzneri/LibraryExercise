@@ -3,13 +3,14 @@ import './App.css'
 import { Routes } from './routes/Routes'
 import { AuthProvider } from './contexts/AuthContext'
 import { BooksProvider } from './contexts/BooksContext'
+import { Container } from 'react-bootstrap'
 
 export const App = () => (
-  <div className='app'>
+  <Container>
     <BooksProvider>
       <AuthProvider>
         <Routes />
       </AuthProvider>
     </BooksProvider>
-  </div>
+  </Container>
 )

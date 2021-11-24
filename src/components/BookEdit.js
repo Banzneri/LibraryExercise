@@ -1,19 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import * as requests from '../requests.js'
 import { useBooks } from '../contexts/BooksContext.js'
+import { Form, Button, Modal, Container } from 'react-bootstrap'
 
-const BookEdit = ({ book, setSelectedBook }) => {
+const BookEdit = ({ book, show, handleClose }) => {
   const { genres, languages, setBooks } = useBooks()
-
-  useEffect(() => {
-    document.body.style.overflow = 'hidden'
-  }, [])
-
-  const hide = () => {
-    document.body.style.overflow = 'auto'
-    setSelectedBook(null)
-  }
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -22,41 +14,68 @@ const BookEdit = ({ book, setSelectedBook }) => {
     book.genreId = e.target[2].value
     book.languageId = e.target[3].value
     requests.editBook(book, setBooks)
-    hide()
+    handleClose()
+  }
+
+  const styles = {
+    form: {
+      paddingBottom: '1rem'
+    },
+    modal: {
+      color: 'black'
+    },
+    modalInner: {
+      background: 'grey'
+    }
   }
 
   return (
-    <div id='edit-container'>
-      <div id='edit-book'>
-        <form onSubmit={e => onSubmit(e)}>
-          <h2>{book.name}</h2>
-          <label htmlFor='edit-name'> Title: </label>
-          <input className='button' type='text' id='edit-name' defaultValue={book.name} required/>
-          <label htmlFor='edit-year'> Release year: </label>
-          <input className='button' type='year' id='edit-year' defaultValue={book.release_year} required/>
-          <label htmlFor='edit-genre'> Genre: </label>
-          <select className='button' id="edit-genre" name="edit-genre" defaultValue={book.genre_id}>
-            {genres.map(e =>
-              <option key={e.id} value={e.id}>{e.name}</option>)}
-          </select>
-          <label htmlFor='edit-language'> Language: </label>
-          <select className='button' id="edit-language" name="edit-languages" defaultValue={book.language_id}>
-            {languages.map(e =>
-              <option key={e.id} value={e.id}>{e.name}</option>)}
-          </select>
-          {/* <label htmlFor='edit-volume'> Quantity: </label>
-          <input type='text' id='edit-volume' defaultValue={getQuantity()} required/> */}
-          <input className='button' type='submit' defaultValue='Edit book' />
-        </form>
-        <input id='close-edit' type='button' value='close' onClick={hide} />
-      </div>
-    </div>
+    <Modal
+      style={styles.modal}
+      show={show}
+      onHide={handleClose}
+      backdrop="static"
+      keyboard={false}>
+      <Modal.Header closeButton>
+        <h2>Edit book</h2>
+      </Modal.Header>
+      <Container>
+        <Form onSubmit={onSubmit} style={styles.form}>
+          <Form.Group className="mb-3" controlId="title">
+            <Form.Label>Title</Form.Label>
+            <Form.Control type="text" defaultValue={book?.name} />
+            <Form.Text className="text-muted">
+            </Form.Text>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="releaseYear">
+            <Form.Label>Released</Form.Label>
+            <Form.Control type="year" defaultValue={book?.release_year} />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="genre">
+            <Form.Label>Genre</Form.Label>
+            <Form.Select aria-label="Genre" defaultValue={book?.genre_id}>
+              {genres.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+            </Form.Select>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="genre">
+            <Form.Label>Language</Form.Label>
+            <Form.Select aria-label="Genre" defaultValue={book?.language_id}>
+              {languages.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+            </Form.Select>
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
+        </Form>
+      </Container>
+    </Modal>
   )
 }
 
 BookEdit.propTypes = {
   book: PropTypes.object,
-  setSelectedBook: PropTypes.func
+  show: PropTypes.bool,
+  handleClose: PropTypes.func
 }
 
 export default BookEdit

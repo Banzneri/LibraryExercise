@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useAuth } from '../contexts/AuthContext.js'
 import { useNavigate } from 'react-router-dom'
 import { BASE_URL } from '../constants'
+import { Col, Container, Row, Button } from 'react-bootstrap'
 
 export const Header = () => {
   const { setAuthed } = useAuth()
@@ -10,7 +11,6 @@ export const Header = () => {
 
   const logOut = () => {
     axios
-      // eslint-disable-next-line quotes
       .get(`${BASE_URL}/users/logout`, { withCredentials: true })
       .then(e => {
         setAuthed(false)
@@ -23,13 +23,29 @@ export const Header = () => {
     navigate('/admin')
   }
 
+  // eslint-disable-next-line no-unused-vars
+  const styles = {
+    header: {
+      paddingTop: '3rem',
+      paddingBottom: '2rem'
+      // background: '#1e3d59'
+    },
+    buttons: {
+      float: 'right'
+    }
+  }
+
   return (
-    <div className='flex-container' id='header'>
-      <h1>Books</h1>
-      <div className='flex-container'>
-        <input type='button' className='button' onClick={admin} value='Admin' />
-        <input type='button' className='button' onClick={logOut} value='Log out' />
-      </div>
-    </div>
+    <Container>
+      <Row style={styles.header}>
+        <Col><h1>Books</h1></Col>
+        <Col>
+          <div style={styles.buttons}>
+            <Button variant='primary' onClick={admin}>Admin</Button>{' '}
+            <Button variant='secondary' onClick={logOut}>Log out</Button>
+          </div>
+        </Col>
+      </Row>
+    </Container>
   )
 }

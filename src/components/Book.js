@@ -1,20 +1,44 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Card, CloseButton, Button, ListGroup, ListGroupItem } from 'react-bootstrap'
+
+const styles = {
+  card: {
+    margin: '1rem 0 1rem 0',
+    background: '#3a3841'
+  },
+  cardImage: {
+    objectFit: 'cover',
+    height: '15rem'
+  },
+  closeButton: {
+    top: 0,
+    right: 0,
+    position: 'absolute'
+  },
+  button: {
+    width: '100%'
+  }
+}
 
 const Book = ({ book, handleRemoveBook, handleViewBook, setBooks, genre, language, volume }) => {
   return (
-    <div className='book' onClick={() => handleViewBook(book)}>
-      <div className='book-info'>
-        <p><b>Name</b>: {book.name}</p>
-        <p><b>Year</b>: {book.release_year}</p>
-        <p><b>Genre</b>: {genre.name}</p>
-        <p><b>Language</b>: {language.name}</p>
-        <p><b>Quantity</b>: {volume.length}</p>
-      </div>
-      <div className='book-buttons'>
-        <input className='remove-book' type='button' value='X' onClick={(e) => handleRemoveBook(e, book.id, setBooks)} />
-      </div>
-    </div>
+    <Card style={styles.card}>
+      <Card.Body>
+        <Card.Title>{book?.name}</Card.Title>
+        <Card.Img src="https://picsum.photos/200/300/" style={styles.cardImage}/>
+        <ListGroup className="list-group-flush">
+          <ListGroupItem><b>Year</b> {book?.release_year}</ListGroupItem>
+          <ListGroupItem><b>Genre</b> {genre?.name}</ListGroupItem>
+          <ListGroupItem><b>Language</b> {language?.name}</ListGroupItem>
+          <ListGroupItem><b>Quantity</b> {volume?.length}</ListGroupItem>
+        </ListGroup>
+      </Card.Body>
+      <CloseButton style={styles.closeButton} onClick={(e) => handleRemoveBook(e, book.id, setBooks)}></CloseButton>
+      <Card.Footer>
+        <Button variant='success' style={styles.button} onClick={() => handleViewBook(book)}>View</Button>
+      </Card.Footer>
+    </Card>
   )
 }
 
