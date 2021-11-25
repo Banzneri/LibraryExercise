@@ -1,4 +1,4 @@
 import React from 'react'
-import LoginForm from '../components/Forms/LoginForm'
+import LoginPage from '../pages/LoginPage'
 
-export const Login = () => <LoginForm />
+export const Login = () => <LoginPage />
