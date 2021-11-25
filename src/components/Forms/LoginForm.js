@@ -50,8 +50,8 @@ const LoginForm = () => {
             <Col md={2} />
             <Col md={6}> <LoremIpsum /> </Col>
           </Row>
+          <Errors errorMessages={errorMessage}/>
         </Container>
-        <Errors errorMessages={errorMessage}/>
       </Form>
     </div>
   )

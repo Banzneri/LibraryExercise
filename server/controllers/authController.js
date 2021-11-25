@@ -38,9 +38,9 @@ export const registerUser = async (request, response, next) => {
 
     if (results.rows.length > 0) {
       return sendConflict(errors, response)
-    } else {
-      addUser(response, request, name, email, hashedPassword)
     }
+
+    addUser(response, request, name, email, hashedPassword)
   })
 }
 

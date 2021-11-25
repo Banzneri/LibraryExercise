@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Book from './Book'
+import Book from './BookCard'
 import BookEdit from './BookEdit'
 import { FilterBooks } from './FilterBooks'
 import * as requests from '../requests.js'
@@ -53,10 +53,9 @@ export const BooksList = () => {
           book={selectedBook}
           show={showEditModal}
           handleClose={handleCloseBook} />
-      <Container>
         <Row>
           {books && sortedBooks.map(b =>
-            <Col sm={4} key={b.id}>
+            <Col sm={4} key={b.volume_id || b.id}>
               <Book
                 book={b}
                 handleRemoveBook={requests.removeBook}
@@ -68,7 +67,6 @@ export const BooksList = () => {
             </Col>
           )}
         </Row>
-      </Container>
     </Container>
   )
 }

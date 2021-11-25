@@ -19,6 +19,23 @@ export const getVolumesByBookId = (request, response) => {
     handleQueryResults(error, results, response))
 }
 
+export const getFreeVolumesByBookId = (request, response) => {
+  const id = parseInt(request.params.id)
+
+  if (!validateNumber(id)) {
+    sendBadRequest('Bad request', response)
+  }
+
+  const query = `SELECT * FROM volumes
+                 WHERE volumes.book_id = $1
+                 AND volumes.id NOT IN
+                 (SELECT borrows.volume_id
+                 FROM borrows)`
+
+  db.query(query, [id], (error, results) =>
+    handleQueryResults(error, results, response))
+}
+
 export const addVolume = (request, response) => {
   const id = parseInt(request.params.id)
 

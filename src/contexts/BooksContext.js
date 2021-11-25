@@ -8,6 +8,7 @@ export function BooksProvider ({ children }) {
   const [genres, setGenres] = React.useState([])
   const [languages, setLanguages] = React.useState([])
   const [volumes, setVolumes] = React.useState([])
+  const [borrows, setBorrows] = React.useState([])
 
   const data = {
     books,
@@ -17,7 +18,9 @@ export function BooksProvider ({ children }) {
     languages,
     setLanguages,
     volumes,
-    setVolumes
+    setVolumes,
+    borrows,
+    setBorrows
   }
 
   return (

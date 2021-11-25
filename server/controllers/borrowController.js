@@ -46,3 +46,34 @@ export const getBorrowByVolumeId = (request, response) => {
   db.query(query, [id], (error, results) =>
     handleQueryResults(error, results, response))
 }
+
+export const getBorrowsByCurrentUserId = (request, response) => {
+  const id = parseInt(request.user.id)
+
+  if (!validateNumber(id)) {
+    sendBadRequest('Bad request', response)
+  }
+
+  const query = 'SELECT * FROM borrows WHERE user_id = $1'
+
+  db.query(query, [id], (error, results) =>
+    handleQueryResults(error, results, response))
+}
+
+export const addBorrowByCurrentUserIdAndVolumeId = (request, response) => {
+  const userId = request.user.id
+  const now = Date.now()
+  const inTwoWeeks = Date.now() + 14
+  const volumeId = request.params.id
+
+  if (!validateNumber(userId)) {
+    sendBadRequest('Bad request', response)
+  }
+
+  const query = `INSERT INTO borrows
+                 (volume_id, user_id, borrowed_at, due_date, returned_at)
+                 VALUES ($1, $2, to_timestamp(${now} / 1000.0), to_timestamp(${inTwoWeeks} / 1000.0), null)`
+
+  db.query(query, [volumeId, userId], (error, results) =>
+    handleQueryResults(error, results, response))
+}

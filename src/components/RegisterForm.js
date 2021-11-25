@@ -54,8 +54,8 @@ const RegisterForm = () => {
             <LoremIpsum />
           </Col>
         </Row>
+        <Errors errorMessages={errors} />
       </Container>
-      <Errors errorMessages={errors} />
     </Form>
   )
 }

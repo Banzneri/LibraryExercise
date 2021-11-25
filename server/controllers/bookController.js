@@ -42,6 +42,23 @@ export const getBookById = (request, response) => {
     handleQueryResults(error, results, response))
 }
 
+export const getBookByVolumeId = (request, response) => {
+  const id = parseInt(request.params.id)
+
+  if (!validateNumber(id)) {
+    sendBadRequest('Bad request', response)
+  }
+
+  const query = `SELECT b.id, b.name, b.release_year, b.genre_id, b.language_id, v.id as volume_id FROM books b
+                 INNER JOIN volumes v
+                 ON v.book_id = b.id
+                 WHERE v.id = $1`
+
+  db.query(query, [id], (error, results) => {
+    handleQueryResults(error, results, response)
+  })
+}
+
 export const addBook = (request, response) => {
   const { name, releaseYear, genreId, languageId } = request.body
 

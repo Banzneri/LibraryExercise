@@ -115,3 +115,11 @@ export const logout = () => {
       console.log(e)
     })
 }
+
+export const getBorrowsByCurrentUser = (setBorrows) => {
+  axios
+    .get(`${BASE_URL}/user/borrows`, { withCredentials: true })
+    .then(borrows => {
+      setBorrows(borrows.data)
+    })
+}

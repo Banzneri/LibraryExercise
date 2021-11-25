@@ -5,7 +5,8 @@ import { Card, CloseButton, Button, ListGroup, ListGroupItem } from 'react-boots
 const styles = {
   card: {
     margin: '1rem 0 1rem 0',
-    background: '#3a3841'
+    background: '#d6d2d2',
+    color: 'black'
   },
   cardImage: {
     objectFit: 'cover',
@@ -18,6 +19,9 @@ const styles = {
   },
   button: {
     width: '100%'
+  },
+  footer: {
+    padding: '0px'
   }
 }
 
@@ -35,7 +39,7 @@ const Book = ({ book, handleRemoveBook, handleViewBook, setBooks, genre, languag
         </ListGroup>
       </Card.Body>
       <CloseButton style={styles.closeButton} onClick={(e) => handleRemoveBook(e, book.id, setBooks)}></CloseButton>
-      <Card.Footer>
+      <Card.Footer style={styles.footer}>
         <Button variant='success' style={styles.button} onClick={() => handleViewBook(book)}>View</Button>
       </Card.Footer>
     </Card>
