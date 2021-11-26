@@ -1,10 +1,10 @@
 import React from 'react'
 import { Header } from '../Components/Header'
-import { BooksList } from '../Components/BooksList'
+import { BooksPage } from '../pages/BooksPage'
 
 export const Books = () => (
   <div>
     <Header />
-    <BooksList />
+    <BooksPage />
   </div>
 )
