@@ -1,6 +1,6 @@
 import React from 'react'
-import { Header } from '../components/Header'
-import { BooksList } from '../components/BooksList'
+import { Header } from '../Components/Header'
+import { BooksList } from '../Components/BooksList'
 
 export const Books = () => (
   <div>

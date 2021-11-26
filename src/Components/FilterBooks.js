@@ -12,7 +12,8 @@ export const FilterBooks = () => {
   const onFilterChange = (e) => {
     const getAllBooks = () => {
       axios
-        .get(`${BASE_URL}/books`, { withCredentials: true })
+        .get(`${BASE_URL}/books`,
+          { withCredentials: true })
         .then(e => {
           setBooks(e.data)
         })
@@ -20,7 +21,8 @@ export const FilterBooks = () => {
 
     const filterBooks = (genre_id) => {
       axios
-        .get(`${BASE_URL}/books/genres/${genre_id}`, { withCredentials: true })
+        .get(`${BASE_URL}/books/genres/${genre_id}`,
+          { withCredentials: true })
         .then(e => {
           setBooks(e.data)
         })

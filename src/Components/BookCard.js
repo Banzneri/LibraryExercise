@@ -6,7 +6,8 @@ const styles = {
   card: {
     margin: '1rem 0 1rem 0',
     background: '#d6d2d2',
-    color: 'black'
+    color: 'black',
+    border: '0px'
   },
   cardImage: {
     objectFit: 'cover',
@@ -18,14 +19,23 @@ const styles = {
     position: 'absolute'
   },
   button: {
-    width: '100%'
+    width: '100%',
+    borderRadius: 0
   },
   footer: {
     padding: '0px'
   }
 }
 
-const Book = ({ book, handleRemoveBook, handleViewBook, setBooks, genre, language, volume }) => {
+const BookCard = ({
+  book,
+  handleRemoveBook,
+  handleViewBook,
+  setBooks,
+  genre,
+  language,
+  volume
+}) => {
   return (
     <Card style={styles.card}>
       <Card.Body>
@@ -38,15 +48,17 @@ const Book = ({ book, handleRemoveBook, handleViewBook, setBooks, genre, languag
           <ListGroupItem><b>Quantity</b> {volume?.length}</ListGroupItem>
         </ListGroup>
       </Card.Body>
-      <CloseButton style={styles.closeButton} onClick={(e) => handleRemoveBook(e, book.id, setBooks)}></CloseButton>
+      <CloseButton style={styles.closeButton} onClick={(e) =>
+        handleRemoveBook(e, book.id, setBooks)}></CloseButton>
       <Card.Footer style={styles.footer}>
-        <Button variant='success' style={styles.button} onClick={() => handleViewBook(book)}>View</Button>
+        <Button variant='success' style={styles.button} onClick={() =>
+          handleViewBook(book)}>View</Button>
       </Card.Footer>
     </Card>
   )
 }
 
-Book.propTypes = {
+BookCard.propTypes = {
   book: PropTypes.object,
   handleRemoveBook: PropTypes.func,
   handleViewBook: PropTypes.func,
@@ -56,4 +68,4 @@ Book.propTypes = {
   volume: PropTypes.array
 }
 
-export default Book
+export default BookCard

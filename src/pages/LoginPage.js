@@ -3,10 +3,10 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext.js'
 import { BASE_URL } from '../constants.js'
-import { Errors } from '../components/Forms/Errors.js'
-import { LoremIpsum } from '../components/LoremIpsum.js'
+import { Errors } from '../Components/Forms/FormComponents/Errors.js'
+import { LoremIpsum } from '../Components/LoremIpsum.js'
 import { Col, Container, Row } from 'react-bootstrap'
-import { LoginForm } from '../components/Forms/LoginForm.js'
+import { LoginForm } from '../Components/Forms/LoginForm.js'
 
 const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState(null)
@@ -22,13 +22,14 @@ const LoginPage = () => {
     }
 
     axios
-      .post(`${BASE_URL}/users/login`, user, { withCredentials: true })
+      .post(`${BASE_URL}/users/login`, user,
+        { withCredentials: true })
       .then(e => {
         setAuthed(true)
         navigate('/books')
       })
       .catch(e => {
-        setErrorMessage('wrong username or password')
+        setErrorMessage('Wrong username or password')
       })
   }
 

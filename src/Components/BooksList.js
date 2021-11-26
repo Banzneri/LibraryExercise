@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import Book from './BookCard'
-import BookEdit from './BookEdit'
+import BookCard from './BookCard'
+import EditBookModal from './EditBookModal'
 import { FilterBooks } from './FilterBooks'
 import * as requests from '../requests.js'
 import { useBooks } from '../contexts/BooksContext'
@@ -49,14 +49,14 @@ export const BooksList = () => {
   return (
     <Container>
       <FilterBooks />
-      <BookEdit
+      <EditBookModal
           book={selectedBook}
           show={showEditModal}
           handleClose={handleCloseBook} />
         <Row>
           {books && sortedBooks.map(b =>
             <Col sm={4} key={b.volume_id || b.id}>
-              <Book
+              <BookCard
                 book={b}
                 handleRemoveBook={requests.removeBook}
                 handleViewBook={handleViewBook}

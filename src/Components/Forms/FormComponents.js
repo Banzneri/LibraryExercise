@@ -17,18 +17,19 @@ PasswordInput.propTypes = {
   id: PropTypes.string
 }
 
-export const TextForm = ({ text, message = null, defaultValue = '' }) => (
+export const TextInput = ({ text, type = 'text', message = null, defaultValue = '' }) => (
   <Form.Group className="mb-3" controlId="text">
     <Form.Label>{text}</Form.Label>
-    <Form.Control type="text" defaultValue={defaultValue} required />
+    <Form.Control type={type} defaultValue={defaultValue} required />
     <Form.Text className="text-muted">
       {message}
     </Form.Text>
   </Form.Group>
 )
 
-TextForm.propTypes = {
+TextInput.propTypes = {
   text: PropTypes.string,
+  type: PropTypes.string,
   message: PropTypes.string,
   defaultValue: PropTypes.string
 }
@@ -50,12 +51,32 @@ SubmitLinkPair.propTypes = {
   submitText: PropTypes.string
 }
 
-export const EmailInput = () => (
+export const EmailInput = ({ message = null }) => (
   <Form.Group className="mb-3" controlId="email">
     <Form.Label>Email</Form.Label>
     <Form.Control type="email" required />
     <Form.Text className="text-muted">
-        We&apos;ll never share your email with anyone else.
+        {message}
     </Form.Text>
   </Form.Group>
 )
+
+EmailInput.propTypes = {
+  message: PropTypes.string
+}
+
+export const SelectInput = ({ labelText, options, id = 'select', defaultValue = undefined }) => (
+  <Form.Group className="mb-3" controlId={id}>
+    <Form.Label>Genre</Form.Label>
+    <Form.Select aria-label={labelText} defaultValue={defaultValue}>
+      {options.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+    </Form.Select>
+  </Form.Group>
+)
+
+SelectInput.propTypes = {
+  labelText: PropTypes.string,
+  options: PropTypes.array,
+  id: PropTypes.string,
+  defaultValue: PropTypes.number
+}
