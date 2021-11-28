@@ -63,8 +63,10 @@ export const getBorrowsByCurrentUserId = (request, response) => {
 export const addBorrowByCurrentUserIdAndVolumeId = (request, response) => {
   const userId = request.user.id
   const now = Date.now()
-  const inTwoWeeks = Date.now() + 14
-  const volumeId = request.params.id
+  const inTwoWeeks = Date.now()
+  const { volumeId } = request.body
+
+  console.log('user: ' + userId + 'in two weeks: ' + inTwoWeeks + ' volumeId: ' + volumeId)
 
   if (!validateNumber(userId)) {
     sendBadRequest('Bad request', response)

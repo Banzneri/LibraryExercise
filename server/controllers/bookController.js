@@ -54,9 +54,8 @@ export const getBookByVolumeId = (request, response) => {
                  ON v.book_id = b.id
                  WHERE v.id = $1`
 
-  db.query(query, [id], (error, results) => {
-    handleQueryResults(error, results, response)
-  })
+  db.query(query, [id], (error, results) =>
+    handleQueryResults(error, results, response))
 }
 
 export const addBook = (request, response) => {

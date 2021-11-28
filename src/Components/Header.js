@@ -18,7 +18,8 @@ export const Header = () => {
 
   const logOut = () => {
     axios
-      .get(`${BASE_URL}/users/logout`, { withCredentials: true })
+      .get(`${BASE_URL}/users/logout`,
+        { withCredentials: true })
       .then(e => {
         setAuthed(false)
         navigate('/login')
@@ -30,8 +31,15 @@ export const Header = () => {
     navigate('/admin')
   }
 
+  const allBooks = () => {
+    requests.getBooks(setBooks)
+    navigate('/books')
+  }
+
   const getBorrowedBooks = () => {
-    axios.all(borrows.map(e => axios.get(`${BASE_URL}/books/volumes/${e.volume_id}`, { withCredentials: true })))
+    axios.all(borrows.map(e =>
+      axios.get(`${BASE_URL}/books/volumes/${e.volume_id}`,
+        { withCredentials: true })))
       .then(axios.spread((...res) => {
         const books = res.map(e => e.data).flat()
         console.log(books)
@@ -39,12 +47,10 @@ export const Header = () => {
       }))
   }
 
-  // eslint-disable-next-line no-unused-vars
   const styles = {
     header: {
       paddingTop: '3rem',
       paddingBottom: '2rem'
-      // background: '#1e3d59'
     },
     buttons: {
       float: 'right'
@@ -58,6 +64,7 @@ export const Header = () => {
         <Col>
           <div style={styles.buttons}>
             <Button variant='primary' onClick={admin}>Admin</Button>{' '}
+            <Button variant='secondary' onClick={allBooks}>Books</Button>{' '}
             <Button variant='secondary' onClick={getBorrowedBooks}>My Borrows</Button>{' '}
             <Button variant='secondary' onClick={logOut}>Log out</Button>{' '}
           </div>

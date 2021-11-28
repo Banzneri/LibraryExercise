@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Card, CloseButton, Button, ListGroup, ListGroupItem } from 'react-bootstrap'
+import { Card, CloseButton, Button, ListGroup, ListGroupItem, Badge } from 'react-bootstrap'
+import { useBooks } from '../contexts/BooksContext'
+import axios from 'axios'
+import { BASE_URL } from '../constants'
 
 const styles = {
   card: {
@@ -32,14 +35,30 @@ const BookCard = ({
   handleRemoveBook,
   handleViewBook,
   setBooks,
-  genre,
-  language,
   volume
 }) => {
+  const [isBorrowed, setIsBorrowed] = useState(false)
+  const { languages, genres, borrows } = useBooks()
+  const language = languages.find(e => e.id === book.language_id)
+  const genre = genres.find(e => e.id === book.genre_id)
+
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/volumes/${book.id}`,
+        { withCredentials: true })
+      .then(e => {
+        const volumeIds = e.data.map(e => e.id)
+        const borrowIds = borrows.map(e => e.volume_id)
+        setIsBorrowed(volumeIds.some(e => borrowIds.includes(e)))
+      })
+  }, [])
+
   return (
     <Card style={styles.card}>
       <Card.Body>
-        <Card.Title>{book?.name}</Card.Title>
+        <Card.Title>
+          {book?.name} {isBorrowed && <Badge bg='success'>Borrowed</Badge>}
+        </Card.Title>
         <Card.Img src="https://picsum.photos/200/300/" style={styles.cardImage}/>
         <ListGroup className="list-group-flush">
           <ListGroupItem><b>Year</b> {book?.release_year}</ListGroupItem>
@@ -51,8 +70,9 @@ const BookCard = ({
       <CloseButton style={styles.closeButton} onClick={(e) =>
         handleRemoveBook(e, book.id, setBooks)}></CloseButton>
       <Card.Footer style={styles.footer}>
-        <Button variant='success' style={styles.button} onClick={() =>
-          handleViewBook(book)}>View</Button>
+        <Button variant='success' style={styles.button} onClick={() => handleViewBook(book)}>
+            View
+        </Button>
       </Card.Footer>
     </Card>
   )

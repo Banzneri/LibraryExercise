@@ -1,13 +1,11 @@
 import React from 'react'
-import BookCard from './BookCard'
+import BookCard from '../BookCard'
 import PropTypes from 'prop-types'
-import * as requests from '../requests.js'
+import { removeBook } from '../../requests.js'
 import { Col } from 'react-bootstrap'
 
 export const BookList = ({
   books,
-  languages,
-  genres,
   setBooks,
   volumes,
   setSelectedBook,
@@ -41,12 +39,10 @@ export const BookList = ({
         <Col sm={4} key={b.volume_id || b.id}>
           <BookCard
             book={b}
-            handleRemoveBook={requests.removeBook}
+            handleRemoveBook={removeBook}
             handleViewBook={handleViewBook}
             setBooks={setBooks}
-            volume={volumes.filter(e => e.book_id === b.id)}
-            genre={genres.find(e => e.id === b.genre_id)}
-            language={languages.find(e => e.id === b.language_id)} />
+            volume={volumes.filter(e => e.book_id === b.id)} />
         </Col>
       )}
     </>
@@ -55,8 +51,6 @@ export const BookList = ({
 
 BookList.propTypes = {
   books: PropTypes.array,
-  languages: PropTypes.array,
-  genres: PropTypes.array,
   setBooks: PropTypes.func,
   volumes: PropTypes.array,
   setSelectedBook: PropTypes.func,

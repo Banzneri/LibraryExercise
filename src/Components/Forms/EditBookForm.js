@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form } from 'react-bootstrap'
-import { SelectInput, SubmitLinkPair, TextInput } from './FormComponents'
+import { SelectInput, SubmitLinkPair, TextInput } from './FormComponents/FormComponents'
 import PropTypes from 'prop-types'
 
 export const EditBookForm = ({ onSubmit, book, genres, languages }) => (

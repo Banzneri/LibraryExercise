@@ -7,11 +7,13 @@ import { Errors } from '../Components/Forms/FormComponents/Errors.js'
 import { LoremIpsum } from '../Components/LoremIpsum.js'
 import { Col, Container, Row } from 'react-bootstrap'
 import { LoginForm } from '../Components/Forms/LoginForm.js'
+import { useBooks } from '../contexts/BooksContext.js'
 
 const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const navigate = useNavigate()
   const { setAuthed } = useAuth()
+  const { setBorrows } = useBooks()
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -25,6 +27,11 @@ const LoginPage = () => {
       .post(`${BASE_URL}/users/login`, user,
         { withCredentials: true })
       .then(e => {
+        return axios.get(`${BASE_URL}/user/borrows`,
+          { withCredentials: true })
+      })
+      .then(e => {
+        setBorrows(e.data)
         setAuthed(true)
         navigate('/books')
       })
