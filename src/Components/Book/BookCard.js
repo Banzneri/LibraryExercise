@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Card, CloseButton, Button, ListGroup, ListGroupItem, Badge } from 'react-bootstrap'
+import { Card, CloseButton, Button, ListGroup, ListGroupItem, Badge, Alert } from 'react-bootstrap'
 import { useBooks } from '../../contexts/BooksContext'
 import axios from 'axios'
 import { BASE_URL } from '../../constants'
@@ -28,6 +28,12 @@ const styles = {
   },
   footer: {
     padding: '0px'
+  },
+  alert: {
+    position: 'absolute',
+    zIndex: 999,
+    width: '100%',
+    border: '1px black solid'
   }
 }
 
@@ -41,8 +47,10 @@ const BookCard = ({
 }) => {
   const [isBorrowed, setIsBorrowed] = useState(false)
   const [freeVolume, setFreeVolume] = useState(0)
+  const [message, setMessage] = useState('')
+  const [numberBorrowed, setNumberBorrowed] = useState(0)
 
-  const { languages, genres, borrows } = useBooks()
+  const { languages, genres, borrows, setBorrows } = useBooks()
   const { role } = useUser()
   const language = languages.find(e => e.id === book.language_id)
   const genre = genres.find(e => e.id === book.genre_id)
@@ -54,6 +62,7 @@ const BookCard = ({
       .then(e => {
         const volumeIds = e.data.map(e => e.id)
         const borrowIds = borrows.map(e => e.volume_id)
+        setNumberBorrowed(volumeIds.filter(e => borrowIds.includes(e)).length)
         setIsBorrowed(volumeIds.some(e => borrowIds.includes(e)))
       })
       .then(e => {
@@ -64,7 +73,36 @@ const BookCard = ({
       .then(e => {
         setFreeVolume(e.data.length)
       })
-  }, [])
+  }, [numberBorrowed])
+
+  const borrow = () => {
+    axios // get available volumes by book id
+      .get(`${BASE_URL}/volumes/book/${book.id}`,
+        { withCredentials: true })
+      .then(e => { // then add an available volume to borrows for the user
+        console.log(e.data)
+        const volumeId = Array.isArray(e.data) ? e.data[0].id : e.data.id
+        return axios.post(`${BASE_URL}/user/borrows/volume`,
+          { volumeId: volumeId },
+          { withCredentials: true })
+      })
+      .then(e => { // then get updated borrows
+        return axios.get(`${BASE_URL}/user/borrows`,
+          { withCredentials: true })
+      })
+      .then(e => { // and then set a message
+        setNumberBorrowed(numberBorrowed + 1)
+        setMessage('Borrow successful')
+        setBorrows(e.data)
+        setTimeout(() => setMessage(''), 1000)
+      })
+      .catch(e => {
+        setMessage('Can\'t loan')
+        setTimeout(() => setMessage(''), 1000)
+      })
+  }
+
+  const alertVariant = message === 'Can\'t loan' ? 'danger' : 'success'
 
   return (
     <Card style={styles.card}>
@@ -83,11 +121,16 @@ const BookCard = ({
         </ListGroup>
       </Card.Body>
       {role === 'ADMIN' &&
-        <CloseButton style={styles.closeButton} onClick={(e) => handleRemoveBook(e, book.id, setBooks)} />}
+        <CloseButton style={styles.closeButton} onClick={(e) => handleRemoveBook(e, book.id, setBooks)} />
+      }
       <Card.Footer style={styles.footer}>
-        <Button variant='success' style={styles.button} onClick={() => handleViewBook(book)}>
-            View
+        <Button variant='success' style={styles.button} onClick={borrow}>
+            Borrow
         </Button>
+        {message
+          ? <Alert style={styles.alert} variant={alertVariant}>{message}</Alert>
+          : null
+        }
       </Card.Footer>
     </Card>
   )

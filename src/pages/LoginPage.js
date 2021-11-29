@@ -22,7 +22,7 @@ const LoginPage = () => {
       .get(`${BASE_URL}/users/login/success`,
         { withCredentials: true })
       .then(e => {
-        setName(e.data.name)
+        setName(e.data.full_name)
         setEmail(e.data.email)
         setRole(e.data.role)
         setAuthed(true)
@@ -46,7 +46,7 @@ const LoginPage = () => {
         { withCredentials: true })
       .then(e => {
         console.log(e.data)
-        setName(e.data.name)
+        setName(e.data.full_name)
         setEmail(e.data.email)
         setRole(e.data.role)
         return axios.get(`${BASE_URL}/user/borrows`,

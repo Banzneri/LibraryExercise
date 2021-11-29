@@ -7,7 +7,7 @@ export const updateBooks = (setBooks) => {
     .get(`${BASE_URL}/books`, { withCredentials: true })
     .then(books => {
       console.log(books.data)
-      setBooks(books.data)
+      setBooks(Array.from(books.data))
     })
     .catch(error => {
       console.log(error)
