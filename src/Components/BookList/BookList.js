@@ -4,14 +4,7 @@ import PropTypes from 'prop-types'
 import { removeBook } from '../../requests.js'
 import { Col } from 'react-bootstrap'
 
-export const BookList = ({
-  books,
-  setBooks,
-  volumes,
-  setSelectedBook,
-  setShowEditModal,
-  page
-}) => {
+export const BookList = ({ books, page }) => {
   const sortByNameAndReturnNew = (booksToSort) => {
     return Array.from(booksToSort).sort((a, b) => {
       const nameA = a.name.toUpperCase()
@@ -27,11 +20,6 @@ export const BookList = ({
     })
   }
 
-  const handleViewBook = (book) => {
-    setSelectedBook(book)
-    setShowEditModal(true)
-  }
-
   const sortedBooks = sortByNameAndReturnNew(books)
 
   return (
@@ -41,9 +29,6 @@ export const BookList = ({
           <BookCard
             book={b}
             handleRemoveBook={removeBook}
-            handleViewBook={handleViewBook}
-            setBooks={setBooks}
-            volume={volumes.filter(e => e.book_id === b.id)}
             page={page} />
         </Col>
       )}
@@ -53,9 +38,5 @@ export const BookList = ({
 
 BookList.propTypes = {
   books: PropTypes.array,
-  setBooks: PropTypes.func,
-  volumes: PropTypes.array,
-  setSelectedBook: PropTypes.func,
-  setShowEditModal: PropTypes.func,
   page: PropTypes.string
 }

@@ -37,20 +37,13 @@ const styles = {
   }
 }
 
-const BookCard = ({
-  book,
-  handleRemoveBook,
-  handleViewBook,
-  setBooks,
-  volume,
-  page
-}) => {
+const BookCard = ({ book, handleRemoveBook, page }) => {
   const [isBorrowed, setIsBorrowed] = useState(false)
   const [freeVolume, setFreeVolume] = useState(0)
   const [message, setMessage] = useState('')
   const [numberBorrowed, setNumberBorrowed] = useState(0)
 
-  const { languages, genres, borrows, setBorrows } = useBooks()
+  const { languages, genres, borrows, setBorrows, setBooks } = useBooks()
   const { role } = useUser()
   const language = languages.find(e => e.id === book.language_id)
   const genre = genres.find(e => e.id === book.genre_id)
@@ -139,11 +132,6 @@ const BookCard = ({
 BookCard.propTypes = {
   book: PropTypes.object,
   handleRemoveBook: PropTypes.func,
-  handleViewBook: PropTypes.func,
-  setBooks: PropTypes.func,
-  genre: PropTypes.object,
-  language: PropTypes.object,
-  volume: PropTypes.array,
   page: PropTypes.string
 }
 

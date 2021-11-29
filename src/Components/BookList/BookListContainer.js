@@ -8,8 +8,8 @@ import PropTypes from 'prop-types'
 export const BookListContainer = ({ page }) => {
   const [selectedBook, setSelectedBook] = useState(null)
   const [showEditModal, setShowEditModal] = useState(false)
-  const { books, volumes } = useBooks()
-  const { setBooks, setLanguages, setGenres, setVolumes } = useBooks()
+  const { books } = useBooks()
+  const { setLanguages, setGenres, setVolumes } = useBooks()
 
   useEffect(() => {
     req.updateGenres(setGenres)
@@ -30,10 +30,6 @@ export const BookListContainer = ({ page }) => {
         handleClose={handleCloseBook} />
       <BookList
         books={books}
-        setBooks={setBooks}
-        volumes={volumes}
-        setSelectedBook={setSelectedBook}
-        setShowEditModal={setShowEditModal}
         page={page} />
     </>
   )
