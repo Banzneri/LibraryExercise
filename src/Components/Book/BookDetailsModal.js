@@ -1,7 +1,7 @@
 import React from 'react'
-import { Container, Modal } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import PropTypes from 'prop-types'
-import { BookDetails } from './BookDetailCard'
+import { BookDetailCard } from './BookDetailCard.js'
 
 export const BookDetailsModal = ({ book, show, handleClose }) => {
   const styles = {
@@ -17,13 +17,9 @@ export const BookDetailsModal = ({ book, show, handleClose }) => {
       onHide={handleClose}
       backdrop="static"
       keyboard={false}>
-      <Modal.Header closeButton>
-        <h2>Book details</h2>
-      </Modal.Header>
-      <Container>
-        <BookDetails book={book}/>
-        <br/>
-      </Container>
+      <Modal.Header closeButton><h3>{book?.name}</h3></Modal.Header>
+      <BookDetailCard book={book} />
+      <br/>
       <br/>
     </Modal>
   )

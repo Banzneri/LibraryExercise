@@ -1,8 +1,4 @@
 import React from 'react'
-import RegisterForm from '../pages/RegisterPage'
+import RegisterPage from '../pages/RegisterPage'
 
-export const Register = () => (
-  <div>
-    <RegisterForm />
-  </div>
-)
+export const Register = () => <RegisterPage />

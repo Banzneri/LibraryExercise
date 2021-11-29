@@ -6,10 +6,13 @@ import { useNavigate } from 'react-router-dom'
 import { BASE_URL } from '../constants'
 import { Col, Container, Row, Button } from 'react-bootstrap'
 import * as requests from '../requests.js'
+import PropTypes from 'prop-types'
+import { useUser } from '../contexts/UserContext.js'
 
-export const Header = () => {
+export const Header = ({ headerText, page }) => {
   const { setAuthed } = useAuth()
-  const { setBooks, borrows, setBorrows } = useBooks()
+  const { setBorrows } = useBooks()
+  const { role } = useUser()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -23,28 +26,19 @@ export const Header = () => {
       .then(e => {
         setAuthed(false)
         navigate('/login')
-        console.log(e)
       })
   }
 
-  const admin = () => {
+  const adminPage = () => {
     navigate('/admin')
   }
 
-  const allBooks = () => {
-    requests.getBooks(setBooks)
+  const booksPage = () => {
     navigate('/books')
   }
 
-  const getBorrowedBooks = () => {
-    axios.all(borrows.map(e =>
-      axios.get(`${BASE_URL}/books/volumes/${e.volume_id}`,
-        { withCredentials: true })))
-      .then(axios.spread((...res) => {
-        const books = res.map(e => e.data).flat()
-        console.log(books)
-        setBooks(books)
-      }))
+  const borrowsPage = () => {
+    navigate('/borrows')
   }
 
   const styles = {
@@ -57,19 +51,29 @@ export const Header = () => {
     }
   }
 
+  const getVariant = (p) => {
+    if (p === page) return 'primary'
+    return 'secondary'
+  }
+
   return (
     <Container>
       <Row style={styles.header}>
-        <Col><h1>Books</h1></Col>
+        <Col><h1>{headerText}</h1></Col>
         <Col>
           <div style={styles.buttons}>
-            <Button variant='primary' onClick={admin}>Admin</Button>{' '}
-            <Button variant='secondary' onClick={allBooks}>Books</Button>{' '}
-            <Button variant='secondary' onClick={getBorrowedBooks}>My Borrows</Button>{' '}
-            <Button variant='secondary' onClick={logOut}>Log out</Button>{' '}
+            {role === 'ADMIN' && <Button variant={getVariant('admin')} onClick={adminPage}>Admin</Button>}{' '}
+            <Button variant={getVariant('books')} onClick={booksPage}>Books</Button>{' '}
+            <Button variant={getVariant('borrows')} onClick={borrowsPage}>My Borrows</Button>{' '}
+            <Button variant={getVariant('logout')} onClick={logOut}>Log out</Button>{' '}
           </div>
         </Col>
       </Row>
     </Container>
   )
+}
+
+Header.propTypes = {
+  headerText: PropTypes.string,
+  page: PropTypes.string
 }

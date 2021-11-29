@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { useBooks } from '../../contexts/BooksContext'
 import { BookList } from './BookList'
 import * as req from '../../requests.js'
-import { BookDetailsModal } from '../BookDetailsModal'
+import { BookDetailsModal } from '../Book/BookDetailsModal'
+import PropTypes from 'prop-types'
 
-export const BookListContainer = () => {
+export const BookListContainer = ({ page }) => {
   const [selectedBook, setSelectedBook] = useState(null)
   const [showEditModal, setShowEditModal] = useState(false)
   const { books, volumes } = useBooks()
   const { setBooks, setLanguages, setGenres, setVolumes } = useBooks()
 
   useEffect(() => {
-    req.getGenres(setGenres)
-    req.getLanguages(setLanguages)
-    req.getVolumes(setVolumes)
-    req.getBooks(setBooks)
+    req.updateGenres(setGenres)
+    req.updateLanguages(setLanguages)
+    req.updateVolumes(setVolumes)
   }, [])
 
   const handleCloseBook = () => {
@@ -25,15 +25,20 @@ export const BookListContainer = () => {
   return (
     <>
       <BookDetailsModal
-          book={selectedBook}
-          show={showEditModal}
-          handleClose={handleCloseBook} />
+        book={selectedBook}
+        show={showEditModal}
+        handleClose={handleCloseBook} />
       <BookList
         books={books}
         setBooks={setBooks}
         volumes={volumes}
         setSelectedBook={setSelectedBook}
-        setShowEditModal={setShowEditModal} />
+        setShowEditModal={setShowEditModal}
+        page={page} />
     </>
   )
+}
+
+BookListContainer.propTypes = {
+  page: PropTypes.string
 }

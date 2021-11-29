@@ -1,12 +1,10 @@
 import React from 'react'
-import AddBookForm from '../Components/Forms/AddBookForm'
 import { Header } from '../Components/Header'
-import { BooksPage } from '../pages/BooksPage'
+import { AdminPage } from '../pages/AdminPage'
 
 export const Admin = () => (
   <div>
-    <Header />
-    <AddBookForm />
-    <BooksPage />
+    <Header headerText='Admin' page='admin'/>
+    <AdminPage />
   </div>
 )

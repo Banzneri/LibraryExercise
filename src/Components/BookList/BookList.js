@@ -1,5 +1,5 @@
 import React from 'react'
-import BookCard from '../BookCard'
+import BookCard from '../Book/BookCard'
 import PropTypes from 'prop-types'
 import { removeBook } from '../../requests.js'
 import { Col } from 'react-bootstrap'
@@ -9,7 +9,8 @@ export const BookList = ({
   setBooks,
   volumes,
   setSelectedBook,
-  setShowEditModal
+  setShowEditModal,
+  page
 }) => {
   const sortByNameAndReturnNew = (booksToSort) => {
     return Array.from(booksToSort).sort((a, b) => {
@@ -35,14 +36,15 @@ export const BookList = ({
 
   return (
     <>
-      {books && sortedBooks.map(b =>
-        <Col sm={4} key={b.volume_id || b.id}>
+      {sortedBooks && sortedBooks.map(b =>
+        <Col sm={4} key={page === 'borrows' ? b.volume_id : b.id}>
           <BookCard
             book={b}
             handleRemoveBook={removeBook}
             handleViewBook={handleViewBook}
             setBooks={setBooks}
-            volume={volumes.filter(e => e.book_id === b.id)} />
+            volume={volumes.filter(e => e.book_id === b.id)}
+            page={page} />
         </Col>
       )}
     </>
@@ -54,5 +56,6 @@ BookList.propTypes = {
   setBooks: PropTypes.func,
   volumes: PropTypes.array,
   setSelectedBook: PropTypes.func,
-  setShowEditModal: PropTypes.func
+  setShowEditModal: PropTypes.func,
+  page: PropTypes.string
 }

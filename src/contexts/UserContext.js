@@ -6,15 +6,16 @@ const userContext = React.createContext()
 export function UserProvider ({ children }) {
   const [name, setName] = React.useState('')
   const [email, setEmail] = React.useState('')
+  const [role, setRole] = React.useState('')
 
   return (
-    <userContext.Provider value={{ name, setName, email, setEmail }}>
+    <userContext.Provider value={{ name, setName, email, setEmail, role, setRole }}>
       {children}
     </userContext.Provider>
   )
 }
 
-export function userUser () {
+export function useUser () {
   const context = React.useContext(userContext)
   if (context === undefined) {
     throw new Error('no context')

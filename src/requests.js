@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const BASE_URL = 'http://localhost:3001'
 
-export const getBooks = (setBooks) => {
+export const updateBooks = (setBooks) => {
   axios
     .get(`${BASE_URL}/books`, { withCredentials: true })
     .then(books => {
@@ -14,7 +14,7 @@ export const getBooks = (setBooks) => {
     })
 }
 
-export const getBooksAlt = (setBooks) => {
+export const updateBooksAlt = (setBooks) => {
   axios
     .get(`${BASE_URL}/booksAlt`, { withCredentials: true })
     .then(books => {
@@ -26,7 +26,7 @@ export const getBooksAlt = (setBooks) => {
     })
 }
 
-export const getGenres = (setGenres) => {
+export const updateGenres = (setGenres) => {
   axios
     .get(`${BASE_URL}/genres`)
     .then(genres => {
@@ -37,7 +37,7 @@ export const getGenres = (setGenres) => {
     })
 }
 
-export const getLanguages = (setLanguages) => {
+export const updateLanguages = (setLanguages) => {
   axios
     .get(`${BASE_URL}/languages`)
     .then(languages => {
@@ -53,7 +53,7 @@ export const removeBook = (event, id, setBooks) => {
   axios
     .delete(`${BASE_URL}/books/${id}`, { withCredentials: true })
     .then(e => {
-      getBooks(setBooks)
+      updateBooks(setBooks)
       console.log(e)
     })
     .catch(error => {
@@ -66,12 +66,12 @@ export const editBook = (book, setBooks) => {
   axios
     .put(`${BASE_URL}/books/${book.id}`, bookToUpdate, { withCredentials: true })
     .then(e => {
-      getBooks(setBooks)
+      updateBooks(setBooks)
       console.log(e)
     })
 }
 
-export const getVolumes = (setVolumes) => {
+export const updateVolumes = (setVolumes) => {
   axios
     .get(`${BASE_URL}/volumes`)
     .then(volumes => {
@@ -86,15 +86,15 @@ export const addBook = (book, setBooks) => {
   axios
     .post(`${BASE_URL}/books`, book, { withCredentials: true })
     .then(e => {
-      getBooks(setBooks)
-      addVolume(e.data[0].id)
+      updateBooks(setBooks)
+      AddVolumeByBookId(e.data[0].id)
     })
     .catch(error => {
       console.log(error)
     })
 }
 
-export const addVolume = (id) => {
+export const AddVolumeByBookId = (id) => {
   axios
     .post(`${BASE_URL}/volumes/${id}`, { withCredentials: true })
     .then(e => {

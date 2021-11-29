@@ -20,11 +20,12 @@ export const getAllBooksAlt = (request, response) => {
 
 export const getBooksByGenreId = (request, response) => {
   const id = parseInt(request.params.id)
-  const query = 'SELECT * FROM books WHERE books.genre_id = $1'
 
   if (!validateNumber(id)) {
-    sendBadRequest('Bad request', response)
+    return sendBadRequest('Bad request', response)
   }
+
+  const query = 'SELECT * FROM books WHERE books.genre_id = $1'
 
   db.query(query, [id], (error, results) =>
     handleQueryResults(error, results, response))
@@ -32,11 +33,12 @@ export const getBooksByGenreId = (request, response) => {
 
 export const getBookById = (request, response) => {
   const id = parseInt(request.params.id)
-  const query = 'SELECT * FROM books WHERE id = $1'
 
   if (!validateNumber(id)) {
-    sendBadRequest('Bad request', response)
+    return sendBadRequest('Bad request', response)
   }
+
+  const query = 'SELECT * FROM books WHERE id = $1'
 
   db.query(query, [id], (error, results) =>
     handleQueryResults(error, results, response))
@@ -46,7 +48,7 @@ export const getBookByVolumeId = (request, response) => {
   const id = parseInt(request.params.id)
 
   if (!validateNumber(id)) {
-    sendBadRequest('Bad request', response)
+    return sendBadRequest('Bad request', response)
   }
 
   const query = `SELECT b.id, b.name, b.release_year, b.genre_id, b.language_id, v.id as volume_id FROM books b
@@ -62,7 +64,7 @@ export const addBook = (request, response) => {
   const { name, releaseYear, genreId, languageId } = request.body
 
   if (!validateBook(name, releaseYear, genreId, languageId)) {
-    sendBadRequest('Bad request', response)
+    return sendBadRequest('Bad request', response)
   }
 
   const query = `INSERT INTO books
@@ -79,7 +81,7 @@ export const updateBook = (request, response) => {
 
   if (!validateBook(name, releaseYear, genreId, languageId) ||
       !validateNumber(id)) {
-    sendBadRequest('Bad request', response)
+    return sendBadRequest('Bad request', response)
   }
 
   const query = `UPDATE books 
@@ -94,7 +96,7 @@ export const deleteBookById = (request, response) => {
   const id = parseInt(request.params.id)
 
   if (!validateNumber(id)) {
-    sendBadRequest('Bad request', response)
+    return sendBadRequest('Bad request', response)
   }
 
   const query = 'DELETE FROM books WHERE id = $1 RETURNING books'

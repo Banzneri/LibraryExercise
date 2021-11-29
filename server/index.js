@@ -12,7 +12,7 @@ const port = 3001
 
 const sessionOptions = {
   secret: 'secret',
-  resave: false,
+  resave: true,
   saveUninitialized: true,
   cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }

@@ -19,7 +19,7 @@ const addUser = (response, request, name, email, password) => {
     handleQueryResults(error, results, response))
 }
 
-export const registerUser = async (request, response, next) => {
+export const registerUser = async (request, response) => {
   const { name, email, password, password2 } = request.body
 
   const errors = []
@@ -44,8 +44,8 @@ export const registerUser = async (request, response, next) => {
   })
 }
 
-export const loginSuccess = (request, response, next) => {
-  response.status(200).json({ message: 'Login successful' })
+export const loginSuccess = (request, response) => {
+  return response.status(200).json(request.user)
 }
 
 export const loginFailed = (request, response) => {
