@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Card, CloseButton, Button, ListGroup, ListGroupItem, Badge, Alert } from 'react-bootstrap'
 import { useBooks } from '../../contexts/BooksContext'
-import axios from 'axios'
-import { BASE_URL } from '../../constants'
 import { useUser } from '../../contexts/UserContext'
+import { addBorrow, getAllVolumesByBookId, getAvailableVolumesByBookId, updateBorrowsByCurrentUser } from '../../requests'
 
 const styles = {
   card: {
@@ -34,6 +33,9 @@ const styles = {
     zIndex: 999,
     width: '100%',
     border: '1px black solid'
+  },
+  badge: {
+    padding: '0.1rem 0.2rem 0.1rem 0.2rem'
   }
 }
 
@@ -41,69 +43,71 @@ const BookCard = ({ book, handleRemoveBook, page }) => {
   const [isBorrowed, setIsBorrowed] = useState(false)
   const [freeVolume, setFreeVolume] = useState(0)
   const [message, setMessage] = useState('')
-  const [numberBorrowed, setNumberBorrowed] = useState(0)
+  const [numberOfVolumesBorrowed, setNumberOfVolumesBorrowed] = useState(0)
 
   const { languages, genres, borrows, setBorrows, setBooks } = useBooks()
   const { role } = useUser()
+
   const language = languages.find(e => e.id === book.language_id)
   const genre = genres.find(e => e.id === book.genre_id)
 
+  let messageAlert
+
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/volumes/${book.id}`,
-        { withCredentials: true })
-      .then(e => {
-        const volumeIds = e.data.map(e => e.id)
-        const borrowIds = borrows.map(e => e.volume_id)
-        setNumberBorrowed(volumeIds.filter(e => borrowIds.includes(e)).length)
-        setIsBorrowed(volumeIds.some(e => borrowIds.includes(e)))
+    // Update current available volumes
+    // and check if the current user has
+    // already borrowed a volume of the book
+    getAllVolumesByBookId(book.id)
+      .then(allVolumes => {
+        const volumeIds = allVolumes.data.map(e => e.id)
+        const borrowedVolumeIds = borrows.map(e => e.volume_id)
+        const borrowedVolumes = volumeIds.filter(e => borrowedVolumeIds.includes(e))
+        console.log(borrowedVolumes.length)
+        setIsBorrowed(borrowedVolumes.length > 0)
       })
-      .then(e => {
-        return axios // get available volumes by book id
-          .get(`${BASE_URL}/volumes/book/${book.id}`,
-            { withCredentials: true })
-      })
-      .then(e => {
-        setFreeVolume(e.data.length)
-      })
-  }, [numberBorrowed])
+      .then(e => getAvailableVolumesByBookId(book.id))
+      .then(e => setFreeVolume(e.data.length))
+  }, [numberOfVolumesBorrowed])
 
   const borrow = () => {
-    axios // get available volumes by book id
-      .get(`${BASE_URL}/volumes/book/${book.id}`,
-        { withCredentials: true })
-      .then(e => { // then add an available volume to borrows for the user
-        console.log(e.data)
+    getAvailableVolumesByBookId(book.id)
+      .then(e => {
         const volumeId = Array.isArray(e.data) ? e.data[0].id : e.data.id
-        return axios.post(`${BASE_URL}/user/borrows/volume`,
-          { volumeId: volumeId },
-          { withCredentials: true })
+        return addBorrow(volumeId)
       })
-      .then(e => { // then get updated borrows
-        return axios.get(`${BASE_URL}/user/borrows`,
-          { withCredentials: true })
+      .then(e => {
+        return updateBorrowsByCurrentUser(setBorrows)
       })
-      .then(e => { // and then set a message
-        setNumberBorrowed(numberBorrowed + 1)
+      .then(e => { // and then set borrows and message
+        setNumberOfVolumesBorrowed(numberOfVolumesBorrowed + 1)
+        clearTimeout(messageAlert)
         setMessage('Borrow successful')
-        setBorrows(e.data)
-        setTimeout(() => setMessage(''), 1000)
+        messageAlert = setTimeout(() => setMessage(''), 2000)
       })
       .catch(e => {
-        setMessage('Can\'t loan')
-        setTimeout(() => setMessage(''), 1000)
+        clearTimeout(messageAlert)
+        setMessage('Not available')
+        messageAlert = setTimeout(() => setMessage(''), 2000)
       })
   }
 
-  const alertVariant = message === 'Can\'t loan' ? 'danger' : 'success'
+  const alertVariant = message === 'Not available' ? 'danger' : 'success'
+
+  const Message = () => message
+    ? <Alert style={styles.alert} variant={alertVariant}>{message}</Alert>
+    : null
+
+  const BorrowedBadge = () => <p>{book?.name} {(isBorrowed || page === 'borrows') &&
+    <Badge style={styles.badge} bg='success'>Borrowed</Badge>}</p>
+
+  const AdminDeleteButton = () => role === 'ADMIN' &&
+    <CloseButton style={styles.closeButton} onClick={(e) => handleRemoveBook(e, book.id, setBooks)} />
 
   return (
     <Card style={styles.card}>
       <Card.Body>
         <Card.Title>
-          {book?.name}{' '}
-           {(isBorrowed || page === 'borrows') &&
-          <Badge bg='success'>Borrowed</Badge>}
+          <BorrowedBadge />
         </Card.Title>
         <Card.Img src="https://picsum.photos/200/300/" style={styles.cardImage} />
         <ListGroup className="list-group-flush">
@@ -113,17 +117,12 @@ const BookCard = ({ book, handleRemoveBook, page }) => {
           <ListGroupItem><b>Quantity</b> {freeVolume}</ListGroupItem>
         </ListGroup>
       </Card.Body>
-      {role === 'ADMIN' &&
-        <CloseButton style={styles.closeButton} onClick={(e) => handleRemoveBook(e, book.id, setBooks)} />
-      }
+      <AdminDeleteButton />
       <Card.Footer style={styles.footer}>
         <Button variant='success' style={styles.button} onClick={borrow}>
             Borrow
         </Button>
-        {message
-          ? <Alert style={styles.alert} variant={alertVariant}>{message}</Alert>
-          : null
-        }
+        <Message />
       </Card.Footer>
     </Card>
   )

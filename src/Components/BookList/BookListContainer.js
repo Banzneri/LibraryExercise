@@ -5,10 +5,9 @@ import * as req from '../../requests.js'
 import { BookDetailsModal } from '../Book/BookDetailsModal'
 import PropTypes from 'prop-types'
 
-export const BookListContainer = ({ page }) => {
+export const BookListContainer = ({ page, books, setBooks }) => {
   const [selectedBook, setSelectedBook] = useState(null)
   const [showEditModal, setShowEditModal] = useState(false)
-  const { books } = useBooks()
   const { setLanguages, setGenres, setVolumes } = useBooks()
 
   useEffect(() => {
@@ -30,11 +29,14 @@ export const BookListContainer = ({ page }) => {
         handleClose={handleCloseBook} />
       <BookList
         books={books}
-        page={page} />
+        page={page}
+        setBooks={setBooks} />
     </>
   )
 }
 
 BookListContainer.propTypes = {
-  page: PropTypes.string
+  page: PropTypes.string,
+  books: PropTypes.array,
+  setBooks: PropTypes.func
 }

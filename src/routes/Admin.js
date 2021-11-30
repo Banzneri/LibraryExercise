@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header } from '../Components/Header'
+import { Header } from '../Components/Header/Header'
 import { AdminPage } from '../pages/AdminPage'
 
 export const Admin = () => (

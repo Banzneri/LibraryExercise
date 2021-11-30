@@ -1,4 +1,8 @@
+* {
+  box-sizing: border-box;
+}
+
 body, html {
   color: aliceblue;
-  background-color: #424049;
+  background-color: #474550;
 }

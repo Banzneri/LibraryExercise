@@ -54,7 +54,6 @@ export const removeBook = (event, id, setBooks) => {
     .delete(`${BASE_URL}/books/${id}`, { withCredentials: true })
     .then(e => {
       updateBooks(setBooks)
-      console.log(e)
     })
     .catch(error => {
       console.log(error)
@@ -100,9 +99,22 @@ export const AddVolumeByBookId = (id) => {
     .then(e => {
       console.log(e)
     })
-    .catch(error => {
-      console.log(error)
-    })
+}
+
+export const getAllVolumesByBookId = (id) => {
+  return axios.get(`${BASE_URL}/volumes/${id}`,
+    { withCredentials: true })
+}
+
+export const getAvailableVolumesByBookId = (id) => {
+  return axios.get(`${BASE_URL}/volumes/book/${id}`,
+    { withCredentials: true })
+}
+
+export const addBorrow = (id) => {
+  return axios.post(`${BASE_URL}/user/borrows/volume`,
+    { volumeId: id },
+    { withCredentials: true })
 }
 
 export const logout = () => {
@@ -116,8 +128,8 @@ export const logout = () => {
     })
 }
 
-export const getBorrowsByCurrentUser = (setBorrows) => {
-  axios
+export const updateBorrowsByCurrentUser = (setBorrows) => {
+  return axios
     .get(`${BASE_URL}/user/borrows`, { withCredentials: true })
     .then(borrows => {
       setBorrows(borrows.data)

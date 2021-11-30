@@ -1,12 +1,13 @@
 import { Container, Row } from 'react-bootstrap'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BookListContainer } from '../Components/BookList/BookListContainer.js'
 import { useBooks } from '../contexts/BooksContext.js'
 import axios from 'axios'
 import { BASE_URL } from '../constants.js'
 
 export const BorrowsPage = () => {
-  const { borrows, setBooks } = useBooks()
+  const [books, setBooks] = useState([])
+  const { borrows } = useBooks()
 
   useEffect(() => {
     axios.all(borrows.map(e =>
@@ -16,17 +17,13 @@ export const BorrowsPage = () => {
         const books = res.map(e => e.data).flat()
         setBooks(books)
       }))
-
-    return function cleanUp () {
-      setBooks([])
-    }
   }, [])
 
   return (
     <Container>
       <Row>
         {borrows.length > 0
-          ? <BookListContainer page='borrows' />
+          ? <BookListContainer page='borrows' books={books} setBooks={setBooks}/>
           : <h3>No borrows yet!</h3>}
       </Row>
     </Container>

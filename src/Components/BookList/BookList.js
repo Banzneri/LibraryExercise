@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { removeBook } from '../../requests.js'
 import { Col } from 'react-bootstrap'
 
-export const BookList = ({ books, page }) => {
+export const BookList = ({ books, setBooks, page }) => {
   const sortByNameAndReturnNew = (booksToSort) => {
     return Array.from(booksToSort).sort((a, b) => {
       const nameA = a.name.toUpperCase()
@@ -28,7 +28,7 @@ export const BookList = ({ books, page }) => {
         <Col sm={4} key={page === 'borrows' ? b.volume_id : b.id}>
           <BookCard
             book={b}
-            handleRemoveBook={removeBook}
+            handleRemoveBook={(e) => removeBook(e, b.id, setBooks)}
             page={page} />
         </Col>
       )}
@@ -38,5 +38,6 @@ export const BookList = ({ books, page }) => {
 
 BookList.propTypes = {
   books: PropTypes.array,
-  page: PropTypes.string
+  page: PropTypes.string,
+  setBooks: PropTypes.func
 }
