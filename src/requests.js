@@ -2,16 +2,9 @@ import axios from 'axios'
 
 const BASE_URL = 'http://localhost:3001'
 
-export const updateBooks = (setBooks) => {
-  axios
+export const getBooks = (setBooks) => {
+  return axios
     .get(`${BASE_URL}/books`, { withCredentials: true })
-    .then(books => {
-      console.log(books.data)
-      setBooks(Array.from(books.data))
-    })
-    .catch(error => {
-      console.log(error)
-    })
 }
 
 export const updateBooksAlt = (setBooks) => {
@@ -53,7 +46,7 @@ export const removeBook = (event, id, setBooks) => {
   axios
     .delete(`${BASE_URL}/books/${id}`, { withCredentials: true })
     .then(e => {
-      updateBooks(setBooks)
+      getBooks(setBooks)
     })
     .catch(error => {
       console.log(error)
@@ -65,7 +58,7 @@ export const editBook = (book, setBooks) => {
   axios
     .put(`${BASE_URL}/books/${book.id}`, bookToUpdate, { withCredentials: true })
     .then(e => {
-      updateBooks(setBooks)
+      getBooks(setBooks)
       console.log(e)
     })
 }
@@ -85,20 +78,17 @@ export const addBook = (book, setBooks) => {
   axios
     .post(`${BASE_URL}/books`, book, { withCredentials: true })
     .then(e => {
-      updateBooks(setBooks)
-      AddVolumeByBookId(e.data[0].id)
+      getBooks(setBooks)
+      addVolumeByBookId(e.data[0].id)
     })
     .catch(error => {
       console.log(error)
     })
 }
 
-export const AddVolumeByBookId = (id) => {
-  axios
+export const addVolumeByBookId = (id) => {
+  return axios
     .post(`${BASE_URL}/volumes/${id}`, { withCredentials: true })
-    .then(e => {
-      console.log(e)
-    })
 }
 
 export const getAllVolumesByBookId = (id) => {
@@ -123,15 +113,24 @@ export const logout = () => {
     .then(e => {
       console.log(e)
     })
-    .catch(e => {
-      console.log(e)
-    })
 }
 
-export const updateBorrowsByCurrentUser = (setBorrows) => {
+export const getBorrowsByCurrentUser = () => {
+  return axios.get(`${BASE_URL}/user/borrows`,
+    { withCredentials: true })
+}
+
+export const getBooksByGenreId = (id) => {
   return axios
-    .get(`${BASE_URL}/user/borrows`, { withCredentials: true })
-    .then(borrows => {
-      setBorrows(borrows.data)
-    })
+    .get(`${BASE_URL}/books/genres/${id}`,
+      { withCredentials: true })
+}
+
+export const getBookByVolumeId = (id) => {
+  return axios.get(`${BASE_URL}/books/volumes/${id}`,
+    { withCredentials: true })
+}
+
+export const getBooksByVolumeIds = (volumeIds) => {
+  return axios.all(volumeIds.map(e => getBookByVolumeId(e)))
 }

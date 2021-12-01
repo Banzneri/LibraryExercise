@@ -3,16 +3,15 @@ import React, { useEffect, useState } from 'react'
 import { BookListContainer } from '../Components/BookList/BookListContainer.js'
 import { useBooks } from '../contexts/BooksContext.js'
 import axios from 'axios'
-import { BASE_URL } from '../constants.js'
+import { getBooksByVolumeIds } from '../requests.js'
+import { FilterBooks } from '../Components/FilterBooks.js'
 
 export const BorrowsPage = () => {
   const [books, setBooks] = useState([])
   const { borrows } = useBooks()
 
   useEffect(() => {
-    axios.all(borrows.map(e =>
-      axios.get(`${BASE_URL}/books/volumes/${e.volume_id}`,
-        { withCredentials: true })))
+    getBooksByVolumeIds(borrows.map(e => e.volume_id))
       .then(axios.spread((...res) => {
         const books = res.map(e => e.data).flat()
         setBooks(books)
@@ -21,6 +20,7 @@ export const BorrowsPage = () => {
 
   return (
     <Container>
+      <FilterBooks books={books} setBooks={setBooks} />
       <Row>
         {borrows.length > 0
           ? <BookListContainer page='borrows' books={books} setBooks={setBooks}/>

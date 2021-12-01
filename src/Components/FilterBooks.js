@@ -1,31 +1,20 @@
 /* eslint-disable camelcase */
 import React from 'react'
-import axios from 'axios'
 import PropTypes from 'prop-types'
-import { BASE_URL } from '../constants.js'
 import { useBooks } from '../contexts/BooksContext.js'
 import { Container, Form } from 'react-bootstrap'
+import { getBooks, getBooksByGenreId } from '../requests.js'
 
-export const FilterBooks = () => {
-  const { genres, setBooks } = useBooks()
+export const FilterBooks = ({ setBooks }) => {
+  const { genres } = useBooks()
 
   const onFilterChange = (e) => {
     const getAllBooks = () => {
-      axios
-        .get(`${BASE_URL}/books`,
-          { withCredentials: true })
-        .then(e => {
-          setBooks(e.data)
-        })
+      getBooks().then(e => setBooks(e.data))
     }
 
     const filterBooks = (genre_id) => {
-      axios
-        .get(`${BASE_URL}/books/genres/${genre_id}`,
-          { withCredentials: true })
-        .then(e => {
-          setBooks(e.data)
-        })
+      getBooksByGenreId(genre_id).then(e => setBooks(e.data))
     }
 
     e.preventDefault()
@@ -40,7 +29,7 @@ export const FilterBooks = () => {
         <Form.Group className="mb-3" controlId="genre">
           <Form.Label>Genre</Form.Label>
           <Form.Select aria-label="Genre" onChange={(e) => onFilterChange(e)}>
-            <option value='null'>All</option>
+            <option value="null">All</option>
             {genres.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
           </Form.Select>
         </Form.Group>

@@ -16,7 +16,7 @@ export const Header = ({ headerText, page }) => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    requests.updateBorrowsByCurrentUser(setBorrows)
+    requests.getBorrowsByCurrentUser(setBorrows)
   }, [])
 
   const logOut = () => {
@@ -37,7 +37,7 @@ export const Header = ({ headerText, page }) => {
       paddingBottom: '2rem'
     },
     navBar: {
-
+      margin: '0 auto'
     }
   }
 

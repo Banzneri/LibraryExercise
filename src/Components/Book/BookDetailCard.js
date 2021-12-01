@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { ListGroup, ListGroupItem, Button, Card } from 'react-bootstrap'
 import { useBooks } from '../../contexts/BooksContext'
 import { BASE_URL } from '../../constants'
-import { updateBooks } from '../../requests'
+import { getBooks } from '../../requests'
 
 export const BookDetailCard = ({ book }) => {
   const [message, setMessage] = useState(' ')
@@ -28,7 +28,7 @@ export const BookDetailCard = ({ book }) => {
           { withCredentials: true })
       })
       .then(e => { // and then set a message
-        updateBooks(setBooks)
+        getBooks(setBooks)
         setMessage('Borrow successful')
         setBorrows(e.data)
       })

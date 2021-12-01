@@ -9,6 +9,7 @@ import { Col, Container, Row } from 'react-bootstrap'
 import { LoginForm } from '../Components/Forms/LoginForm.js'
 import { useBooks } from '../contexts/BooksContext.js'
 import { useUser } from '../contexts/UserContext.js'
+import { getBorrowsByCurrentUser } from '../requests.js'
 
 const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState(null)
@@ -49,8 +50,7 @@ const LoginPage = () => {
         setName(e.data.full_name)
         setEmail(e.data.email)
         setRole(e.data.role)
-        return axios.get(`${BASE_URL}/user/borrows`,
-          { withCredentials: true })
+        return getBorrowsByCurrentUser()
       })
       .then(e => {
         setBorrows(e.data)
