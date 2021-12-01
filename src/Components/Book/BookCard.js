@@ -3,7 +3,16 @@ import PropTypes from 'prop-types'
 import { Card, CloseButton, Button, ListGroup, ListGroupItem, Badge, Alert } from 'react-bootstrap'
 import { useBooks } from '../../contexts/BooksContext'
 import { useUser } from '../../contexts/UserContext'
-import { addBorrow, getAllVolumesByBookId, getAvailableVolumesByBookId, getBorrowsByCurrentUser, addVolumeByBookId } from '../../requests'
+import {
+  addBorrow,
+  getAllVolumesByBookId,
+  getAvailableVolumesByBookId,
+  getBorrowsByCurrentUser,
+  addVolumeByBookId,
+  returnBorrow,
+  getBooksByVolumeIds
+} from '../../requests'
+import axios from 'axios'
 
 const styles = {
   card: {
@@ -39,13 +48,13 @@ const styles = {
   }
 }
 
-const BookCard = ({ book, handleRemoveBook, page }) => {
+const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
   const [isBorrowed, setIsBorrowed] = useState(false)
   const [freeVolume, setFreeVolume] = useState(0)
   const [message, setMessage] = useState('')
   const [numberOfVolumesBorrowed, setNumberOfVolumesBorrowed] = useState(0)
 
-  const { languages, genres, borrows, setBorrows, setBooks } = useBooks()
+  const { languages, genres, borrows, setBorrows } = useBooks()
   const { role } = useUser()
 
   const language = languages.find(e => e.id === book.language_id)
@@ -97,7 +106,29 @@ const BookCard = ({ book, handleRemoveBook, page }) => {
       })
   }
 
+  const returnBook = () => {
+    returnBorrow(book.volume_id)
+      .then(e => getBorrowsByCurrentUser())
+      .then(e => {
+        const myBorrows = e.data
+        setBorrows(myBorrows)
+        return getBooksByVolumeIds(myBorrows.map(b => b.volume_id))
+      })
+      .then(axios.spread((...res) => {
+        const books = res.map(e => e.data).flat()
+        setBooks(books)
+      }))
+  }
+
   const alertVariant = message === 'Not available' ? 'danger' : 'success'
+
+  const ReturnBookButton = () =>
+    <Button style={styles.button} onClick={returnBook}>Return book</Button>
+
+  const BorrowButton = () =>
+    <Button variant='success' style={styles.button} onClick={borrow}>
+      Borrow
+    </Button>
 
   const Message = () => message
     ? <Alert style={styles.alert} variant={alertVariant}>{message}</Alert>
@@ -132,9 +163,7 @@ const BookCard = ({ book, handleRemoveBook, page }) => {
       </Card.Body>
       <AdminDeleteButton />
       <Card.Footer style={styles.footer}>
-        <Button variant='success' style={styles.button} onClick={borrow}>
-          Borrow
-        </Button>
+        {page === 'borrows' ? <ReturnBookButton /> : <BorrowButton />}
         <Message />
       </Card.Footer>
     </Card>
@@ -144,7 +173,8 @@ const BookCard = ({ book, handleRemoveBook, page }) => {
 BookCard.propTypes = {
   book: PropTypes.object,
   handleRemoveBook: PropTypes.func,
-  page: PropTypes.string
+  page: PropTypes.string,
+  setBooks: PropTypes.func
 }
 
 export default BookCard

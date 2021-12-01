@@ -29,7 +29,8 @@ export const BookList = ({ books, setBooks, page }) => {
           <BookCard
             book={b}
             handleRemoveBook={(e) => removeBook(e, b.id, setBooks)}
-            page={page} />
+            page={page}
+            setBooks={setBooks}/>
         </Col>
       )}
     </>

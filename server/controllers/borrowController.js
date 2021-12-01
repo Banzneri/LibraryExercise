@@ -79,3 +79,20 @@ export const addBorrowByCurrentUserIdAndVolumeId = (request, response) => {
   db.query(query, [volumeId, userId], (error, results) =>
     handleQueryResults(error, results, response))
 }
+
+export const deleteBorrowByVolumeId = (request, response) => {
+  const id = parseInt(request.params.id)
+
+  console.log(id)
+
+  if (!validateNumber(id)) {
+    return sendBadRequest('Bad request', response)
+  }
+
+  const query = `DELETE FROM borrows
+                 WHERE volume_id = $1`
+
+  db.query(query, [id], (error, results) => {
+    handleQueryResults(error, results, response)
+  })
+}

@@ -8,6 +8,7 @@ const borrowRoutes = (app) => {
   app.get('/borrows/volume/:id', isAuth, borrowQueries.getBorrowByVolumeId)
   app.get('/user/borrows', isAuth, borrowQueries.getBorrowsByCurrentUserId)
   app.post('/user/borrows/volume', isAuth, borrowQueries.addBorrowByCurrentUserIdAndVolumeId)
+  app.delete('/borrows/volumes/:id', isAuth, borrowQueries.deleteBorrowByVolumeId)
 }
 
 export default borrowRoutes
