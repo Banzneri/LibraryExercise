@@ -26,7 +26,6 @@ export const validateNumber = (number) => {
 
 export const handleQueryResults = (error, results, response) => {
   if (error) {
-    console.log('errorrr')
     return sendInternalServerError(error.message, response)
   }
   return response.status(200).json(results.rows)

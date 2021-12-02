@@ -96,3 +96,26 @@ export const deleteBorrowByVolumeId = (request, response) => {
     handleQueryResults(error, results, response)
   })
 }
+
+export const borrowBookByCurrentUserAndBookId = (request, response) => {
+  const userId = request.user.id
+  const { id } = request.body
+  const now = Date.now()
+
+  if (!validateNumber(userId) || !validateNumber(id)) {
+    return sendBadRequest('Bad request', response)
+  }
+
+  const query = `INSERT INTO borrows
+                 (volume_id, user_id, borrowed_at, due_date, returned_at)
+                 SELECT volumes.id, $1, to_timestamp(${now} / 1000.0), to_timestamp(${now} / 1000.0), null
+                 FROM volumes
+                 WHERE volumes.id NOT IN
+                 (SELECT borrows.volume_id FROM borrows)
+                 AND volumes.book_id = $2
+                 LIMIT 1
+                 RETURNING *`
+
+  db.query(query, [userId, id], (error, results) =>
+    handleQueryResults(error, results, response))
+}

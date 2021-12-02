@@ -3,9 +3,11 @@ import * as requests from '../../requests.js'
 import { useBooks } from '../../contexts/BooksContext.js'
 import { Container, Form } from 'react-bootstrap'
 import { SelectInput, SubmitLinkPair, TextInput } from './FormComponents/FormComponents.js'
+import { useNavigate } from 'react-router'
 
 const AddBookForm = () => {
   const { genres, languages, setBooks } = useBooks()
+  const navigate = useNavigate()
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -22,6 +24,7 @@ const AddBookForm = () => {
     }
 
     requests.addBook(book, setBooks)
+    navigate('/books')
   }
 
   return (

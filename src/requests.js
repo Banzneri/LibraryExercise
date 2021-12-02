@@ -139,3 +139,9 @@ export const returnBorrow = (volumeId) => {
   return axios.delete(`${BASE_URL}/borrows/volumes/${volumeId}`,
     { withCredentials: true })
 }
+
+export const borrowBookByBookId = (bookId) => {
+  return axios.post(`${BASE_URL}/user/borrows/books/${bookId}`,
+    { id: bookId },
+    { withCredentials: true })
+}

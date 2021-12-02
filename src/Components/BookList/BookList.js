@@ -5,7 +5,7 @@ import { removeBook } from '../../requests.js'
 import { Col } from 'react-bootstrap'
 
 export const BookList = ({ books, setBooks, page }) => {
-  const sortByNameAndReturnNew = (booksToSort) => {
+  const getSortedArray = (booksToSort) => {
     return Array.from(booksToSort).sort((a, b) => {
       const nameA = a.name.toUpperCase()
       const nameB = b.name.toUpperCase()
@@ -20,7 +20,7 @@ export const BookList = ({ books, setBooks, page }) => {
     })
   }
 
-  const sortedBooks = sortByNameAndReturnNew(books)
+  const sortedBooks = getSortedArray(books)
 
   return (
     <>

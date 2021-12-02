@@ -4,15 +4,12 @@ import PropTypes from 'prop-types'
 const booksContext = React.createContext()
 
 export function BooksProvider ({ children }) {
-  const [books, setBooks] = React.useState([])
   const [genres, setGenres] = React.useState([])
   const [languages, setLanguages] = React.useState([])
   const [volumes, setVolumes] = React.useState([])
   const [borrows, setBorrows] = React.useState([])
 
   const data = {
-    books,
-    setBooks,
     genres,
     setGenres,
     languages,

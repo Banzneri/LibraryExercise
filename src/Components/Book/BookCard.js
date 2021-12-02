@@ -4,13 +4,13 @@ import { Card, CloseButton, Button, ListGroup, ListGroupItem, Badge, Alert } fro
 import { useBooks } from '../../contexts/BooksContext'
 import { useUser } from '../../contexts/UserContext'
 import {
-  addBorrow,
   getAllVolumesByBookId,
   getAvailableVolumesByBookId,
   getBorrowsByCurrentUser,
   addVolumeByBookId,
   returnBorrow,
-  getBooksByVolumeIds
+  getBooksByVolumeIds,
+  borrowBookByBookId
 } from '../../requests'
 import axios from 'axios'
 
@@ -79,12 +79,13 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
   }, [numberOfVolumesBorrowed])
 
   const borrow = () => {
-    getAvailableVolumesByBookId(book.id)
+    borrowBookByBookId(book.id)
       .then(e => {
-        const volumeId = Array.isArray(e.data) ? e.data[0].id : e.data.id
-        return addBorrow(volumeId)
+        if (e.data.length === 0) {
+          throw new Error('No available volumes')
+        }
+        return getBorrowsByCurrentUser()
       })
-      .then(e => getBorrowsByCurrentUser())
       .then(e => { // and then set borrows and message
         setBorrows(e.data)
         setNumberOfVolumesBorrowed(numberOfVolumesBorrowed + 1)

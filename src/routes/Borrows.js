@@ -6,9 +6,10 @@ import { BorrowsPage } from '../pages/BorrowsPage'
 export const Borrows = () => {
   const { name } = useUser()
   const header = `Borrows for ${name}`
+
   return (
     <div>
-      <Header headerText={header} page='borrows' />
+      <Header headerText={header} page="borrows" />
       <BorrowsPage />
     </div>
   )
