@@ -8,7 +8,7 @@ import {
   getAvailableVolumesByBookId,
   getBorrowsByCurrentUser,
   addVolumeByBookId,
-  returnBorrow,
+  returnBorrowedBook,
   getBooksByVolumeIds,
   borrowBookByBookId
 } from '../../requests'
@@ -63,22 +63,24 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
   let messageAlert
 
   useEffect(() => {
-    // Update current available volumes
-    // and check if the current user has
-    // already borrowed a volume of the book
+    // Update current available volumes of the book
+    // and check if the current user has already
+    // borrowed a volume of the book
     getAllVolumesByBookId(book.id)
       .then(allVolumes => {
         const volumeIds = allVolumes.data.map(e => e.id)
         const borrowedVolumeIds = borrows.map(e => e.volume_id)
         const borrowedVolumes = volumeIds.filter(e => borrowedVolumeIds.includes(e))
-        console.log(borrowedVolumes.length)
         setIsBorrowed(borrowedVolumes.length > 0)
       })
-      .then(e => getAvailableVolumesByBookId(book.id))
+      .then(() => getAvailableVolumesByBookId(book.id))
       .then(e => setFreeVolume(e.data.length))
   }, [numberOfVolumesBorrowed])
 
   const borrow = () => {
+    // borrow book if there are volumes available,
+    // then get up-to-date borrows data from the server
+    // and set a message
     borrowBookByBookId(book.id)
       .then(e => {
         if (e.data.length === 0) {
@@ -108,7 +110,7 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
   }
 
   const returnBook = () => {
-    returnBorrow(book.volume_id)
+    returnBorrowedBook(book.volume_id)
       .then(e => getBorrowsByCurrentUser())
       .then(e => {
         const myBorrows = e.data

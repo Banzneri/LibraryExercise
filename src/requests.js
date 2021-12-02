@@ -135,7 +135,7 @@ export const getBooksByVolumeIds = (volumeIds) => {
   return axios.all(volumeIds.map(e => getBookByVolumeId(e)))
 }
 
-export const returnBorrow = (volumeId) => {
+export const returnBorrowedBook = (volumeId) => {
   return axios.delete(`${BASE_URL}/borrows/volumes/${volumeId}`,
     { withCredentials: true })
 }
