@@ -132,7 +132,12 @@ export const getBookByVolumeId = (id) => {
 }
 
 export const getBooksByVolumeIds = (volumeIds) => {
-  return axios.all(volumeIds.map(e => getBookByVolumeId(e)))
+  return axios
+    .all(volumeIds.map(e => getBookByVolumeId(e)))
+    .then(axios.spread((...res) => {
+      const books = res.map(e => e.data).flat()
+      return books
+    }))
 }
 
 export const returnBorrowedBook = (volumeId) => {

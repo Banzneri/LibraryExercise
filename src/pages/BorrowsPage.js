@@ -2,7 +2,6 @@ import { Container, Row } from 'react-bootstrap'
 import React, { useEffect, useState } from 'react'
 import { BookListContainer } from '../Components/BookList/BookListContainer.js'
 import { useBooks } from '../contexts/BooksContext.js'
-import axios from 'axios'
 import { getBooksByVolumeIds } from '../requests.js'
 import { FilterBooks } from '../Components/FilterBooks.js'
 
@@ -11,11 +10,11 @@ export const BorrowsPage = () => {
   const { borrows } = useBooks()
 
   useEffect(() => {
-    getBooksByVolumeIds(borrows.map(e => e.volume_id))
-      .then(axios.spread((...res) => {
-        const books = res.map(e => e.data).flat()
-        setBooks(books)
-      }))
+    const updateBooks = async () => {
+      const books = await getBooksByVolumeIds(borrows.map(e => e.volume_id))
+      setBooks(books)
+    }
+    updateBooks()
   }, [])
 
   return (

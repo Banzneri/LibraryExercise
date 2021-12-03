@@ -37,7 +37,8 @@ export const Header = ({ headerText, page }) => {
       paddingBottom: '2rem'
     },
     navBar: {
-      margin: '0 auto'
+      margin: '0 auto',
+      float: 'right'
     }
   }
 
@@ -47,15 +48,15 @@ export const Header = ({ headerText, page }) => {
         <Col><h1>{headerText}</h1></Col>
         <Col>
           <Navbar style={styles.navBar} variant="dark" expand="lg">
-              <Navbar.Toggle aria-controls="basic-navbar-nav" />
-              <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="me-auto">
-                  <AdminLink />
-                  <Nav.Link onClick={() => navigate('/books')}>Books</Nav.Link>
-                  <Nav.Link onClick={() => navigate('/borrows')}>Borrows</Nav.Link>
-                  <Nav.Link onClick={logOut}>Log out</Nav.Link>
-                </Nav>
-              </Navbar.Collapse>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto">
+                <AdminLink />
+                <Nav.Link onClick={() => navigate('/books')}>Books</Nav.Link>
+                <Nav.Link onClick={() => navigate('/borrows')}>Borrows</Nav.Link>
+                <Nav.Link onClick={logOut}>Log out</Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
           </Navbar>
         </Col>
       </Row>

@@ -12,7 +12,6 @@ import {
   getBooksByVolumeIds,
   borrowBookByBookId
 } from '../../requests'
-import axios from 'axios'
 
 const styles = {
   card: {
@@ -62,68 +61,63 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
 
   let messageAlert
 
+  const resetMessage = () => {
+    clearTimeout(messageAlert)
+    messageAlert = setTimeout(() => setMessage(''), 1000)
+  }
+
   useEffect(() => {
-    // Update current available volumes of the book
-    // and check if the current user has already
-    // borrowed a volume of the book
-    getAllVolumesByBookId(book.id)
-      .then(allVolumes => {
-        const volumeIds = allVolumes.data.map(e => e.id)
-        const borrowedVolumeIds = borrows.map(e => e.volume_id)
-        const borrowedVolumes = volumeIds.filter(e => borrowedVolumeIds.includes(e))
-        setIsBorrowed(borrowedVolumes.length > 0)
-      })
-      .then(() => getAvailableVolumesByBookId(book.id))
-      .then(e => setFreeVolume(e.data.length))
+    resetMessage()
+  }, [message])
+
+  useEffect(() => {
+    const update = async () => {
+      const volumes = await getAllVolumesByBookId(book.id)
+      const volumeIds = volumes.data.map(e => e.id)
+      const borrowIds = borrows.map(e => e.volume_id)
+      const borrowedVolumes = volumeIds.filter(e => borrowIds.includes(e))
+      setIsBorrowed(borrowedVolumes.length > 0)
+
+      const availableVolumes = await getAvailableVolumesByBookId(book.id)
+      setFreeVolume(availableVolumes.data.length)
+      resetMessage()
+    }
+    update()
   }, [numberOfVolumesBorrowed])
 
   const borrow = () => {
-    // borrow book if there are volumes available,
-    // then get up-to-date borrows data from the server
-    // and set a message
-    borrowBookByBookId(book.id)
-      .then(e => {
-        if (e.data.length === 0) {
-          throw new Error('No available volumes')
-        }
-        return getBorrowsByCurrentUser()
-      })
-      .then(e => { // and then set borrows and message
-        setBorrows(e.data)
-        setNumberOfVolumesBorrowed(numberOfVolumesBorrowed + 1)
-        clearTimeout(messageAlert)
-        setMessage('Borrow successful')
-        messageAlert = setTimeout(() => setMessage(''), 2000)
-      })
-      .catch(e => {
-        clearTimeout(messageAlert)
-        setMessage('Not available')
-        messageAlert = setTimeout(() => setMessage(''), 2000)
-      })
+    const doBorrowOperaration = async () => {
+      const borrowedBook = await borrowBookByBookId(book.id)
+
+      if (borrowedBook.data.length === 0) {
+        throw new Error('No available volumes')
+      }
+
+      const currentBorrows = await getBorrowsByCurrentUser()
+      setBorrows(currentBorrows.data)
+      setNumberOfVolumesBorrowed(numberOfVolumesBorrowed + 1)
+      setMessage('Borrow successful')
+    }
+
+    doBorrowOperaration().catch(e => setMessage(e.message))
   }
 
-  const addVolume = () => {
-    addVolumeByBookId(book.id)
-      .then(e => {
-        setFreeVolume(freeVolume + 1)
-      })
+  const addVolume = async () => {
+    await addVolumeByBookId(book.id)
+    setFreeVolume(freeVolume + 1)
   }
 
-  const returnBook = () => {
-    returnBorrowedBook(book.volume_id)
-      .then(e => getBorrowsByCurrentUser())
-      .then(e => {
-        const myBorrows = e.data
-        setBorrows(myBorrows)
-        return getBooksByVolumeIds(myBorrows.map(b => b.volume_id))
-      })
-      .then(axios.spread((...res) => {
-        const books = res.map(e => e.data).flat()
-        setBooks(books)
-      }))
+  const returnBook = async () => {
+    await returnBorrowedBook(book.volume_id)
+
+    const currentBorrowsData = await getBorrowsByCurrentUser()
+    const currentBorrows = currentBorrowsData.data
+    setBorrows(currentBorrows)
+    const borrowedBooks = await getBooksByVolumeIds(currentBorrows.map(b => b.volume_id))
+    setBooks(borrowedBooks)
   }
 
-  const alertVariant = message === 'Not available' ? 'danger' : 'success'
+  const alertVariant = message === 'No available volumes' ? 'danger' : 'success'
 
   const ReturnBookButton = () =>
     <Button style={styles.button} onClick={returnBook}>Return book</Button>

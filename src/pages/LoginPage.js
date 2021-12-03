@@ -18,48 +18,44 @@ const LoginPage = () => {
   const { setBorrows } = useBooks()
   const { setName, setEmail, setRole } = useUser()
 
+  const updateUserInfo = (user) => {
+    setName(user.full_name)
+    setEmail(user.email)
+    setRole(user.role)
+    setAuthed(true)
+  }
+
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/users/login/success`,
+    const tryLogin = async () => {
+      const user = await axios.get(`${BASE_URL}/users/login/success`,
         { withCredentials: true })
-      .then(e => {
-        setName(e.data.full_name)
-        setEmail(e.data.email)
-        setRole(e.data.role)
-        setAuthed(true)
-        navigate('/books')
-      })
-      .catch(e => {
-        console.log('not logged in')
-      })
+      updateUserInfo(user.data)
+      navigate('/books')
+    }
+    tryLogin()
   }, [])
 
   const onSubmit = (e) => {
-    e.preventDefault()
+    const doSubmit = async (e) => {
+      e.preventDefault()
 
-    const user = {
-      email: e.target[0].value,
-      password: e.target[1].value
+      const input = {
+        email: e.target[0].value,
+        password: e.target[1].value
+      }
+
+      const user = await axios.post(`${BASE_URL}/users/login`, input,
+        { withCredentials: true })
+
+      updateUserInfo(user.data)
+
+      const borrows = await getBorrowsByCurrentUser()
+      setBorrows(borrows.data)
+      navigate('/books')
     }
 
-    axios
-      .post(`${BASE_URL}/users/login`, user,
-        { withCredentials: true })
-      .then(e => {
-        console.log(e.data)
-        setName(e.data.full_name)
-        setEmail(e.data.email)
-        setRole(e.data.role)
-        return getBorrowsByCurrentUser()
-      })
-      .then(e => {
-        setBorrows(e.data)
-        setAuthed(true)
-        navigate('/books')
-      })
-      .catch(e => {
-        setErrorMessage('Wrong username or password')
-      })
+    doSubmit(e)
+      .catch(e => setErrorMessage('Wrong username or password'))
   }
 
   const Title = () => <h2 style={{ marginBottom: '2rem' }}>Log in</h2>
@@ -69,7 +65,7 @@ const LoginPage = () => {
       <Row>
         <Col md={4} style={{ marginBottom: '5rem' }}>
           <Title />
-          <LoginForm onSubmit={onSubmit}/>
+          <LoginForm onSubmit={e => onSubmit(e)}/>
         </Col>
         <Col md={2} />
         <Col md={6}> <LoremIpsum /> </Col>
