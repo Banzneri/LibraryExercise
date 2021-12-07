@@ -150,3 +150,8 @@ export const borrowBookByBookId = (bookId) => {
     { id: bookId },
     { withCredentials: true })
 }
+
+export const deleteVolumeByBookId = (bookId) => {
+  return axios.delete(`${BASE_URL}/volumes/book/${bookId}`,
+    { withCredentials: true })
+}

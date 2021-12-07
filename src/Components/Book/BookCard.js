@@ -10,7 +10,8 @@ import {
   addVolumeByBookId,
   returnBorrowedBook,
   getBooksByVolumeIds,
-  borrowBookByBookId
+  borrowBookByBookId,
+  deleteVolumeByBookId
 } from '../../requests'
 
 const styles = {
@@ -48,7 +49,6 @@ const styles = {
 }
 
 const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
-  const [isBorrowed, setIsBorrowed] = useState(false)
   const [freeVolume, setFreeVolume] = useState(0)
   const [message, setMessage] = useState('')
   const [numberOfVolumesBorrowed, setNumberOfVolumesBorrowed] = useState(0)
@@ -67,17 +67,18 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
   }
 
   useEffect(() => {
+    console.log('message effect')
     resetMessage()
   }, [message])
 
   useEffect(() => {
     const update = async () => {
+      console.log('number of volumes effect')
       const volumes = await getAllVolumesByBookId(book.id)
       const volumeIds = volumes.data.map(e => e.id)
       const borrowIds = borrows.map(e => e.volume_id)
       const borrowedVolumes = volumeIds.filter(e => borrowIds.includes(e))
-      setIsBorrowed(borrowedVolumes.length > 0)
-
+      setNumberOfVolumesBorrowed(borrowedVolumes.length)
       const availableVolumes = await getAvailableVolumesByBookId(book.id)
       setFreeVolume(availableVolumes.data.length)
       resetMessage()
@@ -107,17 +108,23 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
     setFreeVolume(freeVolume + 1)
   }
 
+  const deleteVolume = async () => {
+    await deleteVolumeByBookId(book.id)
+  }
+
   const returnBook = async () => {
     await returnBorrowedBook(book.volume_id)
 
     const currentBorrowsData = await getBorrowsByCurrentUser()
     const currentBorrows = currentBorrowsData.data
     setBorrows(currentBorrows)
+    setNumberOfVolumesBorrowed(numberOfVolumesBorrowed - 1)
     const borrowedBooks = await getBooksByVolumeIds(currentBorrows.map(b => b.volume_id))
     setBooks(borrowedBooks)
   }
 
   const alertVariant = message === 'No available volumes' ? 'danger' : 'success'
+  const showNumberOfVolumes = page === 'books' && numberOfVolumesBorrowed > 1
 
   const ReturnBookButton = () =>
     <Button style={styles.button} onClick={returnBook}>Return book</Button>
@@ -131,16 +138,19 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
     ? <Alert style={styles.alert} variant={alertVariant}>{message}</Alert>
     : null
 
-  const BorrowedBadge = () => (isBorrowed || page === 'borrows') &&
+  const BorrowedBadge = () => (numberOfVolumesBorrowed > 0 || page === 'borrows') &&
     <Badge style={styles.badge} bg='success'>
-      Borrowed
+      Borrowed {showNumberOfVolumes ? `x ${numberOfVolumesBorrowed}` : ''}
     </Badge>
 
   const AdminDeleteButton = () => role === 'ADMIN' &&
     <CloseButton style={styles.closeButton} onClick={(e) => handleRemoveBook(e, book.id, setBooks)} />
 
   const AdminAddVolumeButton = () => role === 'ADMIN' &&
-    <Button size="sm" onClick={addVolume}>Add volume</Button>
+    <Button size="sm" onClick={addVolume}>Add</Button>
+
+  const AdminDeleteVolumeButton = () => role === 'ADMIN' &&
+    <Button size="sm" variant='danger' onClick={deleteVolume}>Delete</Button>
 
   return (
     <Card style={styles.card}>
@@ -153,9 +163,10 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
           <ListGroupItem><b>Year</b> {book?.release_year}</ListGroupItem>
           <ListGroupItem><b>Genre</b> {genre?.name}</ListGroupItem>
           <ListGroupItem><b>Language</b> {language?.name}</ListGroupItem>
-          <ListGroupItem>
-            <b>Quantity</b> {freeVolume} <AdminAddVolumeButton />
-          </ListGroupItem>
+          {page === 'books' &&
+            <ListGroupItem>
+              <b>Quantity</b> {freeVolume} <AdminAddVolumeButton /> <AdminDeleteVolumeButton />
+            </ListGroupItem>}
         </ListGroup>
       </Card.Body>
       <AdminDeleteButton />
