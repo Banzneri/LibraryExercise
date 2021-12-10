@@ -67,13 +67,7 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
   }
 
   useEffect(() => {
-    console.log('message effect')
-    resetMessage()
-  }, [message])
-
-  useEffect(() => {
     const update = async () => {
-      console.log('number of volumes effect')
       const volumes = await getAllVolumesByBookId(book.id)
       const volumeIds = volumes.data.map(e => e.id)
       const borrowIds = borrows.map(e => e.volume_id)
@@ -84,7 +78,12 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
       resetMessage()
     }
     update()
-  }, [numberOfVolumesBorrowed])
+  }, [])
+
+  useEffect(() => {
+    console.log('message effect')
+    resetMessage()
+  }, [message])
 
   const borrow = () => {
     const doBorrowOperaration = async () => {
@@ -98,6 +97,7 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
       setBorrows(currentBorrows.data)
       setNumberOfVolumesBorrowed(numberOfVolumesBorrowed + 1)
       setMessage('Borrow successful')
+      setFreeVolume(freeVolume - 1)
     }
 
     doBorrowOperaration().catch(e => setMessage(e.message))
@@ -110,10 +110,12 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
 
   const deleteVolume = async () => {
     const freeVolumes = await getAvailableVolumesByBookId(book.id)
+
     if (freeVolumes.data.length === 0) {
       setMessage('Nothing to delete')
       return
     }
+
     await deleteVolumeById(freeVolumes.data[0].id)
     setFreeVolume(freeVolume - 1)
   }
@@ -125,6 +127,7 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
     const currentBorrows = currentBorrowsData.data
     setBorrows(currentBorrows)
     setNumberOfVolumesBorrowed(numberOfVolumesBorrowed - 1)
+
     const borrowedBooks = await getBooksByVolumeIds(currentBorrows.map(b => b.volume_id))
     setBooks(borrowedBooks)
   }
@@ -171,7 +174,7 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
           <ListGroupItem><b>Language</b> {language?.name}</ListGroupItem>
           {page === 'books' &&
             <ListGroupItem>
-              <b>Quantity</b> {freeVolume} <AdminAddVolumeButton /> <AdminDeleteVolumeButton />
+              <b>Available</b> {freeVolume} <AdminAddVolumeButton /> <AdminDeleteVolumeButton />
             </ListGroupItem>}
         </ListGroup>
       </Card.Body>

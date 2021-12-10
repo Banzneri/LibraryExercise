@@ -1,7 +1,7 @@
 import React from 'react'
 import BookCard from '../Book/BookCard'
 import PropTypes from 'prop-types'
-import { removeBook } from '../../requests.js'
+import { getBooks, removeBook } from '../../requests.js'
 import { Col } from 'react-bootstrap'
 
 export const BookList = ({ books, setBooks, page }) => {
@@ -20,6 +20,13 @@ export const BookList = ({ books, setBooks, page }) => {
     })
   }
 
+  const handleRemoveBook = async (e, id) => {
+    e.stopPropagation()
+    await removeBook(id)
+    const booksData = await getBooks()
+    setBooks(booksData.data)
+  }
+
   const sortedBooks = getSortedArray(books)
 
   return (
@@ -28,7 +35,7 @@ export const BookList = ({ books, setBooks, page }) => {
         <Col sm={4} key={page === 'borrows' ? b.volume_id : b.id}>
           <BookCard
             book={b}
-            handleRemoveBook={(e) => removeBook(e, b.id, setBooks)}
+            handleRemoveBook={(e) => handleRemoveBook(e, b.id)}
             page={page}
             setBooks={setBooks}/>
         </Col>

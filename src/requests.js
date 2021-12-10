@@ -2,21 +2,9 @@ import axios from 'axios'
 
 const BASE_URL = 'http://localhost:3001'
 
-export const getBooks = (setBooks) => {
+export const getBooks = () => {
   return axios
     .get(`${BASE_URL}/books`, { withCredentials: true })
-}
-
-export const updateBooksAlt = (setBooks) => {
-  axios
-    .get(`${BASE_URL}/booksAlt`, { withCredentials: true })
-    .then(books => {
-      console.log(books.data)
-      setBooks(books.data)
-    })
-    .catch(error => {
-      console.log(error)
-    })
 }
 
 export const updateGenres = (setGenres) => {
@@ -41,16 +29,9 @@ export const updateLanguages = (setLanguages) => {
     })
 }
 
-export const removeBook = (event, id, setBooks) => {
-  event.stopPropagation()
-  axios
+export const removeBook = (id) => {
+  return axios
     .delete(`${BASE_URL}/books/${id}`, { withCredentials: true })
-    .then(e => {
-      getBooks(setBooks)
-    })
-    .catch(error => {
-      console.log(error)
-    })
 }
 
 export const editBook = (book, setBooks) => {
