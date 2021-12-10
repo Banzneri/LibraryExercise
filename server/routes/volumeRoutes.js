@@ -6,6 +6,7 @@ const volumeRoutes = (app) => {
   app.get('/volumes/book/:id', volumeController.getFreeVolumesByBookId)
   app.post('/volumes/:id', volumeController.addVolume)
   app.delete('/volumes/book/:id', volumeController.deleteFreeVolumeByBookId)
+  app.delete('/volumes/:id', volumeController.deleteVolumeById)
 }
 
 export default volumeRoutes

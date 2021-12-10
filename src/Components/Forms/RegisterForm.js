@@ -1,7 +1,10 @@
 import React from 'react'
 import { Form } from 'react-bootstrap'
 import PropTypes from 'prop-types'
-import { EmailInput, PasswordInput, SubmitLinkPair, TextInput } from './FormComponents/FormComponents'
+import { EmailInput } from './FormComponents/EmailInput'
+import { SubmitLinkPair } from './FormComponents/SubmitLinkPair'
+import { TextInput } from './FormComponents/TextInput'
+import { PasswordInput } from './FormComponents/PasswordInput'
 
 export const RegisterForm = ({ onSubmit }) => (
   <Form onSubmit={(e) => onSubmit(e)}>

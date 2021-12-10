@@ -155,3 +155,8 @@ export const deleteVolumeByBookId = (bookId) => {
   return axios.delete(`${BASE_URL}/volumes/book/${bookId}`,
     { withCredentials: true })
 }
+
+export const deleteVolumeById = (id) => {
+  return axios.delete(`${BASE_URL}/volumes/${id}`,
+    { withCredentials: true })
+}

@@ -2,8 +2,10 @@ import React from 'react'
 import * as requests from '../../requests.js'
 import { useBooks } from '../../contexts/BooksContext.js'
 import { Container, Form } from 'react-bootstrap'
-import { SelectInput, SubmitLinkPair, TextInput } from './FormComponents/FormComponents.js'
 import { useNavigate } from 'react-router'
+import { SelectInput } from './FormComponents/SelectInput.js'
+import { SubmitLinkPair } from './FormComponents/SubmitLinkPair.js'
+import { TextInput } from './FormComponents/TextInput.js'
 
 const AddBookForm = () => {
   const { genres, languages, setBooks } = useBooks()

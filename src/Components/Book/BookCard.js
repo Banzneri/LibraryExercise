@@ -11,7 +11,7 @@ import {
   returnBorrowedBook,
   getBooksByVolumeIds,
   borrowBookByBookId,
-  deleteVolumeByBookId
+  deleteVolumeById
 } from '../../requests'
 
 const styles = {
@@ -109,7 +109,13 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
   }
 
   const deleteVolume = async () => {
-    await deleteVolumeByBookId(book.id)
+    const freeVolumes = await getAvailableVolumesByBookId(book.id)
+    if (freeVolumes.data.length === 0) {
+      setMessage('Nothing to delete')
+      return
+    }
+    await deleteVolumeById(freeVolumes.data[0].id)
+    setFreeVolume(freeVolume - 1)
   }
 
   const returnBook = async () => {
