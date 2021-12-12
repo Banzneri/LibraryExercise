@@ -1,59 +1,40 @@
-import passportLocal from 'passport-local'
 import db from './db.js'
-import bcrypt from 'bcrypt'
+import PassportJWT from 'passport-jwt'
+import path from 'path'
+import fs from 'fs'
 
-const LocalStrategy = passportLocal.Strategy
+const JwtStrategy = PassportJWT.Strategy
+const ExtractJwt = PassportJWT.ExtractJwt
+
+const __dirname = path.resolve()
+const pathToKey = path.join(__dirname, 'server', 'id_rsa_pub.pem')
+const PUB_KEY = fs.readFileSync(pathToKey, 'utf8')
+
+const options = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: PUB_KEY,
+  algorithms: ['RS256']
+}
 
 const initialize = (passport) => {
-  const authenticateUser = (email, password, done) => {
-    db.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
+  const authenticateUser = (jwtPayload, done) => {
+    const id = jwtPayload.sub
+    db.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
       if (error) {
-        throw error
+        return done(error, false)
+      }
+      const user = results.rows[0]
+      if (user) {
+        return done(null, user)
       } else {
-        console.log(results.rows)
-
-        if (results.rows.length > 0) {
-          const user = results.rows[0]
-          bcrypt.compare(password, user.password, (error, isMatch) => {
-            if (error) {
-              throw error
-            }
-
-            if (isMatch) {
-              console.log('Is match: ' + user)
-              return done(null, user)
-            } else {
-              return done(null, false, { message: 'Password is not correct' })
-            }
-          })
-        } else {
-          return done(null, false, { message: 'Email is not registered' })
-        }
+        return done(null, false)
       }
     })
   }
+
   passport.use(
-    new LocalStrategy({
-      usernameField: 'email',
-      passwordField: 'password'
-    },
-    authenticateUser
-    )
+    new JwtStrategy(options, authenticateUser)
   )
-
-  passport.serializeUser((user, done) => done(null, user.id))
-
-  passport.deserializeUser((id, done) => {
-    console.log('deserializing: ' + id)
-    db.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
-      if (error) {
-        throw error
-      }
-      const user = results.rows[0]
-      console.log('deserializing: ' + user)
-      return done(null, user)
-    })
-  })
 }
 
 export default initialize
