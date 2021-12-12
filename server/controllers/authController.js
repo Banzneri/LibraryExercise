@@ -87,5 +87,6 @@ export const loginFailed = (request, response) => {
 }
 
 export const logout = (request, response) => {
-  response.status(200).json({ message: 'Logout successful', user: request.user })
+  request.user = null
+  response.status(200).json({ message: 'Logout successful' })
 }

@@ -6,7 +6,7 @@ const authRoutes = (app) => {
   app.post('/users/login', authControllers.loginUser)
   app.get('/users/login/success', isAuth(), authControllers.loginSuccess)
   app.get('/users/login/failed', authControllers.loginFailed)
-  app.get('/users/logout', isAuth(), authControllers.logout)
+  app.get('/users/logout', authControllers.logout)
 }
 
 export default authRoutes
