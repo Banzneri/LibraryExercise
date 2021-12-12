@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext.js'
-import { BASE_URL } from '../constants.js'
 import { Errors } from '../Components/Forms/FormComponents/Errors.js'
 import { LoremIpsum } from '../Components/LoremIpsum.js'
 import { Col, Container, Row } from 'react-bootstrap'
@@ -14,7 +12,7 @@ import { getBorrowsByCurrentUser } from '../requests.js'
 const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const navigate = useNavigate()
-  const { setAuthed } = useAuth()
+  const { setAuthed, authAxios } = useAuth()
   const { setBorrows } = useBooks()
   const { setName, setEmail, setRole } = useUser()
 
@@ -27,8 +25,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     const tryLogin = async () => {
-      const user = await axios.get(`${BASE_URL}/users/login/success`,
-        { withCredentials: true })
+      const user = await authAxios.get('/users/login/success')
       updateUserInfo(user.data)
       navigate('/books')
     }
@@ -44,18 +41,19 @@ const LoginPage = () => {
         password: e.target[1].value
       }
 
-      const user = await axios.post(`${BASE_URL}/users/login`, input,
-        { withCredentials: true })
+      const response = await authAxios.post('/users/login', input)
+      const token = response.data.token
+      localStorage.setItem('token', token)
 
-      updateUserInfo(user.data)
+      updateUserInfo(response.data.user)
 
-      const borrows = await getBorrowsByCurrentUser()
+      const borrows = await getBorrowsByCurrentUser(authAxios)
       setBorrows(borrows.data)
       navigate('/books')
     }
 
     doSubmit(e)
-      .catch(e => setErrorMessage('Wrong username or password'))
+      .catch(e => setErrorMessage(e.message))
   }
 
   const Title = () => <h2 style={{ marginBottom: '2rem' }}>Log in</h2>

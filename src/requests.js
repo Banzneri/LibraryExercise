@@ -1,10 +1,18 @@
 import axios from 'axios'
+import { BASE_URL } from './constants'
 
-const BASE_URL = 'http://localhost:3001'
+const token = localStorage.getItem('token')
+
+const authAxios = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    Authorization: token
+  }
+})
 
 export const getBooks = () => {
-  return axios
-    .get(`${BASE_URL}/books`, { withCredentials: true })
+  return authAxios
+    .get('/books')
 }
 
 export const updateGenres = (setGenres) => {
@@ -30,14 +38,14 @@ export const updateLanguages = (setLanguages) => {
 }
 
 export const removeBook = (id) => {
-  return axios
-    .delete(`${BASE_URL}/books/${id}`, { withCredentials: true })
+  return authAxios
+    .delete(`/books/${id}`)
 }
 
 export const editBook = (book, setBooks) => {
   const bookToUpdate = book
-  axios
-    .put(`${BASE_URL}/books/${book.id}`, bookToUpdate, { withCredentials: true })
+  authAxios
+    .put(`/books/${book.id}`, bookToUpdate)
     .then(e => {
       getBooks(setBooks)
       console.log(e)
@@ -45,8 +53,8 @@ export const editBook = (book, setBooks) => {
 }
 
 export const updateVolumes = (setVolumes) => {
-  axios
-    .get(`${BASE_URL}/volumes`)
+  authAxios
+    .get('/volumes')
     .then(volumes => {
       setVolumes(volumes.data)
     })
@@ -56,8 +64,8 @@ export const updateVolumes = (setVolumes) => {
 }
 
 export const addBook = (book, setBooks) => {
-  axios
-    .post(`${BASE_URL}/books`, book, { withCredentials: true })
+  authAxios
+    .post('/books', book)
     .then(e => {
       getBooks(setBooks)
       addVolumeByBookId(e.data[0].id)
@@ -68,24 +76,21 @@ export const addBook = (book, setBooks) => {
 }
 
 export const addVolumeByBookId = (id) => {
-  return axios
-    .post(`${BASE_URL}/volumes/${id}`, { withCredentials: true })
+  return authAxios
+    .post(`/volumes/${id}`)
 }
 
 export const getAllVolumesByBookId = (id) => {
-  return axios.get(`${BASE_URL}/volumes/${id}`,
-    { withCredentials: true })
+  return authAxios.get(`/volumes/${id}`)
 }
 
 export const getAvailableVolumesByBookId = (id) => {
-  return axios.get(`${BASE_URL}/volumes/book/${id}`,
-    { withCredentials: true })
+  return authAxios.get(`/volumes/book/${id}`)
 }
 
 export const addBorrow = (id) => {
-  return axios.post(`${BASE_URL}/user/borrows/volume`,
-    { volumeId: id },
-    { withCredentials: true })
+  return authAxios.post('/user/borrows/volume',
+    { volumeId: id })
 }
 
 export const logout = () => {
@@ -97,19 +102,16 @@ export const logout = () => {
 }
 
 export const getBorrowsByCurrentUser = () => {
-  return axios.get(`${BASE_URL}/user/borrows`,
-    { withCredentials: true })
+  return authAxios.get('/user/borrows')
 }
 
 export const getBooksByGenreId = (id) => {
-  return axios
-    .get(`${BASE_URL}/books/genres/${id}`,
-      { withCredentials: true })
+  return authAxios
+    .get(`/books/genres/${id}`)
 }
 
 export const getBookByVolumeId = (id) => {
-  return axios.get(`${BASE_URL}/books/volumes/${id}`,
-    { withCredentials: true })
+  return authAxios.get(`/books/volumes/${id}`)
 }
 
 export const getBooksByVolumeIds = (volumeIds) => {
@@ -122,22 +124,18 @@ export const getBooksByVolumeIds = (volumeIds) => {
 }
 
 export const returnBorrowedBook = (volumeId) => {
-  return axios.delete(`${BASE_URL}/borrows/volumes/${volumeId}`,
-    { withCredentials: true })
+  return authAxios.delete(`/borrows/volumes/${volumeId}`)
 }
 
 export const borrowBookByBookId = (bookId) => {
-  return axios.post(`${BASE_URL}/user/borrows/books/${bookId}`,
-    { id: bookId },
-    { withCredentials: true })
+  return authAxios.post(`/user/borrows/books/${bookId}`,
+    { id: bookId })
 }
 
 export const deleteVolumeByBookId = (bookId) => {
-  return axios.delete(`${BASE_URL}/volumes/book/${bookId}`,
-    { withCredentials: true })
+  return authAxios.delete(`/volumes/book/${bookId}`)
 }
 
 export const deleteVolumeById = (id) => {
-  return axios.delete(`${BASE_URL}/volumes/${id}`,
-    { withCredentials: true })
+  return authAxios.delete(`/volumes/${id}`)
 }
