@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext.js'
-import { Errors } from '../Components/Forms/FormComponents/Errors.js'
-import { LoremIpsum } from '../Components/LoremIpsum.js'
+import { Errors } from '../components/Forms/FormComponents/Errors.js'
+import { LoremIpsum } from '../components/LoremIpsum.js'
 import { Col, Container, Row } from 'react-bootstrap'
-import { LoginForm } from '../Components/Forms/LoginForm.js'
-import { useBooks } from '../contexts/BooksContext.js'
+import { LoginForm } from '../components/Forms/LoginForm.js'
 import { useUser } from '../contexts/UserContext.js'
-import { getBorrowsByCurrentUser } from '../requests.js'
 
 const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const navigate = useNavigate()
   const { setAuthed, authAxios } = useAuth()
-  const { setBorrows } = useBooks()
   const { setName, setEmail, setRole } = useUser()
 
   const updateUserInfo = (user) => {
@@ -46,9 +43,6 @@ const LoginPage = () => {
       localStorage.setItem('token', token)
 
       updateUserInfo(response.data.user)
-
-      const borrows = await getBorrowsByCurrentUser(authAxios)
-      setBorrows(borrows.data)
       navigate('/books')
     }
 

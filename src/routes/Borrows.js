@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header } from '../Components/Header/Header'
+import { Header } from '../components/Header/Header'
 import { useUser } from '../contexts/UserContext'
 import { BorrowsPage } from '../pages/BorrowsPage'
 

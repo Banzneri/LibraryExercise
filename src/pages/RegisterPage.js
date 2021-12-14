@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { Col, Container, Row } from 'react-bootstrap'
-import { Errors } from '../Components/Forms/FormComponents/Errors'
-import { LoremIpsum } from '../Components/LoremIpsum'
-import { RegisterForm } from '../Components/Forms/RegisterForm'
+import { Errors } from '../components/Forms/FormComponents/Errors'
+import { LoremIpsum } from '../components/LoremIpsum'
+import { RegisterForm } from '../components/Forms/RegisterForm'
 import { BASE_URL } from '../constants'
 
 const RegisterPage = () => {

@@ -101,7 +101,7 @@ export const logout = () => {
     })
 }
 
-export const getBorrowsByCurrentUser = () => {
+export const getBorrowsByCurrentUser = (authAxios) => {
   return authAxios.get('/user/borrows')
 }
 
@@ -110,13 +110,13 @@ export const getBooksByGenreId = (id) => {
     .get(`/books/genres/${id}`)
 }
 
-export const getBookByVolumeId = (id) => {
+export const getBookByVolumeId = (authAxios, id) => {
   return authAxios.get(`/books/volumes/${id}`)
 }
 
-export const getBooksByVolumeIds = (volumeIds) => {
-  return axios
-    .all(volumeIds.map(e => getBookByVolumeId(e)))
+export const getBooksByVolumeIds = (authAxios, volumeIds) => {
+  return Promise
+    .all(volumeIds.map(e => getBookByVolumeId(authAxios, e)))
     .then(axios.spread((...res) => {
       const books = res.map(e => e.data).flat()
       return books

@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { FilterBooks } from '../Components/FilterBooks'
+import { FilterBooks } from '../components/FilterBooks'
 import { Container, Row } from 'react-bootstrap'
-import { BookListContainer } from '../Components/BookList/BookListContainer'
-import { getBooks, getBorrowsByCurrentUser } from '../requests'
+import { BookListContainer } from '../components/BookList/BookListContainer'
 import { useBooks } from '../contexts/BooksContext'
+import { useAuth } from '../contexts/AuthContext'
 
 export const BooksPage = () => {
   const [books, setBooks] = useState([])
   const { setBorrows } = useBooks()
+  const { authAxios } = useAuth()
 
   useEffect(() => {
-    getBorrowsByCurrentUser()
-      .then(e => setBorrows(e.data))
-      .then(() => getBooks())
-      .then(e => setBooks(e.data))
+    const update = async () => {
+      const borrows = await authAxios.get('/user/borrows')
+      const books = await authAxios.get('/books')
+      setBorrows(borrows.data)
+      setBooks(books.data)
+    }
+    update()
   }, [])
 
   return (
