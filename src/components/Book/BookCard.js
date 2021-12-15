@@ -4,15 +4,15 @@ import { Card, CloseButton, Button, ListGroup, ListGroupItem, Badge, Alert } fro
 import { useBooks } from '../../contexts/BooksContext'
 import { useUser } from '../../contexts/UserContext'
 import {
-  getAllVolumesByBookId,
-  getAvailableVolumesByBookId,
-  getBorrowsByCurrentUser,
   addVolumeByBookId,
   returnBorrowedBook,
-  getBooksByVolumeIds,
-  borrowBookByBookId,
-  deleteVolumeById
-} from '../../requests'
+  deleteVolumeById,
+  getAllVolumesByBook,
+  getAvailableVolumesByBook,
+  borrowBook,
+  getBorrowsByCurrentUser,
+  getBooksByVolumeIds
+} from '../../LibraryService'
 
 const styles = {
   card: {
@@ -68,13 +68,13 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
 
   useEffect(() => {
     const update = async () => {
-      const volumes = await getAllVolumesByBookId(book.id)
-      const volumeIds = volumes.data.map(e => e.id)
+      const volumes = await getAllVolumesByBook(book)
+      const volumeIds = volumes.map(e => e.id)
       const borrowIds = borrows.map(e => e.volume_id)
       const borrowedVolumes = volumeIds.filter(e => borrowIds.includes(e))
       setNumberOfVolumesBorrowed(borrowedVolumes.length)
-      const availableVolumes = await getAvailableVolumesByBookId(book.id)
-      setFreeVolume(availableVolumes.data.length)
+      const availableVolumes = await getAvailableVolumesByBook(book)
+      setFreeVolume(availableVolumes.length)
       resetMessage()
     }
     update()
@@ -87,14 +87,13 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
 
   const borrow = () => {
     const doBorrowOperaration = async () => {
-      const borrowedBook = await borrowBookByBookId(book.id)
-
-      if (borrowedBook.data.length === 0) {
+      const borrowedBook = await borrowBook(book)
+      console.log(borrowedBook)
+      if (borrowedBook.length === 0) {
         throw new Error('No available volumes')
       }
 
-      const currentBorrows = await getBorrowsByCurrentUser()
-      setBorrows(currentBorrows.data)
+      setBorrows(await getBorrowsByCurrentUser())
       setNumberOfVolumesBorrowed(numberOfVolumesBorrowed + 1)
       setMessage('Borrow successful')
       setFreeVolume(freeVolume - 1)
@@ -109,22 +108,21 @@ const BookCard = ({ book, handleRemoveBook, page, setBooks }) => {
   }
 
   const deleteVolume = async () => {
-    const freeVolumes = await getAvailableVolumesByBookId(book.id)
+    const availableVolumes = await getAvailableVolumesByBook(book)
 
-    if (freeVolumes.data.length === 0) {
+    if (availableVolumes.length === 0) {
       setMessage('Nothing to delete')
       return
     }
 
-    await deleteVolumeById(freeVolumes.data[0].id)
+    await deleteVolumeById(availableVolumes[0].id)
     setFreeVolume(freeVolume - 1)
   }
 
   const returnBook = async () => {
     await returnBorrowedBook(book.volume_id)
 
-    const currentBorrowsData = await getBorrowsByCurrentUser()
-    const currentBorrows = currentBorrowsData.data
+    const currentBorrows = await getBorrowsByCurrentUser()
     setBorrows(currentBorrows)
     setNumberOfVolumesBorrowed(numberOfVolumesBorrowed - 1)
 

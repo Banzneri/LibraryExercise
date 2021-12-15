@@ -3,18 +3,18 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useBooks } from '../contexts/BooksContext.js'
 import { Container, Form } from 'react-bootstrap'
-import { getBooks, getBooksByGenreId } from '../requests.js'
+import { getBooks, getBooksByGenreId } from '../LibraryService.js'
 
 export const FilterBooks = ({ setBooks }) => {
   const { genres } = useBooks()
 
   const onFilterChange = (e) => {
-    const getAllBooks = () => {
-      getBooks().then(e => setBooks(e.data))
+    const getAllBooks = async () => {
+      setBooks(await getBooks())
     }
 
-    const filterBooks = (genre_id) => {
-      getBooksByGenreId(genre_id).then(e => setBooks(e.data))
+    const filterBooks = async (genre_id) => {
+      setBooks(await getBooksByGenreId(genre_id))
     }
 
     e.preventDefault()
@@ -30,7 +30,8 @@ export const FilterBooks = ({ setBooks }) => {
           <Form.Label>Genre</Form.Label>
           <Form.Select aria-label="Genre" onChange={(e) => onFilterChange(e)}>
             <option value="null">All</option>
-            {genres.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+            {genres.map(e =>
+              <option key={e.id} value={e.id}>{e.name}</option>)}
           </Form.Select>
         </Form.Group>
       </Form>

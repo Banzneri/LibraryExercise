@@ -1,17 +1,17 @@
 import React from 'react'
-import * as requests from '../../requests.js'
 import { useBooks } from '../../contexts/BooksContext.js'
 import { Container, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router'
 import { SelectInput } from './FormComponents/SelectInput.js'
 import { SubmitLinkPair } from './FormComponents/SubmitLinkPair.js'
 import { TextInput } from './FormComponents/TextInput.js'
+import { addBook } from '../../LibraryService.js'
 
 const AddBookForm = () => {
-  const { genres, languages, setBooks } = useBooks()
+  const { genres, languages } = useBooks()
   const navigate = useNavigate()
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
     const name = e.target[0].value
     const releaseYear = e.target[1].value
@@ -25,7 +25,7 @@ const AddBookForm = () => {
       languageId
     }
 
-    requests.addBook(book, setBooks)
+    await addBook(book)
     navigate('/books')
   }
 

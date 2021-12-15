@@ -22,6 +22,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     const tryLogin = async () => {
+      if (!localStorage.getItem('token')) return
       const user = await authAxios.get('/users/login/success')
       updateUserInfo(user.data)
       navigate('/books')
